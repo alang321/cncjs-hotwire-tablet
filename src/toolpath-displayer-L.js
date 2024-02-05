@@ -2,7 +2,7 @@
 
 "use strict;"
 
-$(function() {
+$(function () {
     var root = window;
 
     var canvas = document.getElementById("small-toolpath-L");
@@ -29,7 +29,7 @@ $(function() {
     };
     var bboxIsSet = false;
 
-    var resetBbox = function() {
+    var resetBbox = function () {
         bbox.min.x = Infinity;
         bbox.min.y = Infinity;
         bbox.max.x = -Infinity;
@@ -38,31 +38,31 @@ $(function() {
 
     }
 
-    var formatLimit = function(mm) {
-        return (units == 'G20') ? (mm/25.4).toFixed(3)+'"' : mm.toFixed(2)+'mm';
+    var formatLimit = function (mm) {
+        return (units == 'G20') ? (mm / 25.4).toFixed(3) + '"' : mm.toFixed(2) + 'mm';
     }
 
     var toolX = null;
     var toolY = null;
     var toolSave = null;
     var toolRadius = 4;
-    var toolRectWH = toolRadius*2 + 20;  // Slop to encompass the entire image area
+    var toolRectWH = toolRadius * 2 + 20;  // Slop to encompass the entire image area
 
-    var drawTool = function(pos) {
-        toolX = xToPixel(pos.z)-toolRadius-10;
-        toolY = yToPixel(pos.a)-toolRadius-10;
-        
-        toolSave = tp.getImageData(toolX, toolY, Math.round(toolRectWH*scaler), Math.round(toolRectWH*scaler));
+    var drawTool = function (pos) {
+        toolX = xToPixel(pos.z) - toolRadius - 10;
+        toolY = yToPixel(pos.a) - toolRadius - 10;
+
+        toolSave = tp.getImageData(toolX, toolY, Math.round(toolRectWH * scaler), Math.round(toolRectWH * scaler));
 
         tp.beginPath();
         tp.strokeStyle = 'magenta';
         tp.fillStyle = 'magenta';
-        tp.arc(pos.z, pos.a, toolRadius/scaler, 0, Math.PI*2, true);
+        tp.arc(pos.z, pos.a, toolRadius / scaler, 0, Math.PI * 2, true);
         tp.fill();
         tp.stroke();
     }
 
-    var drawOrigin = function() {
+    var drawOrigin = function () {
         tp.clearRect(0, 0, canvas.width, canvas.height);
 
         var grid_size = 40;
@@ -72,132 +72,132 @@ $(function() {
         var y_axis_starting_point = { number: 1, suffix: '' };
         // canvas width
         var canvas_width = canvas.width;
-        
+
         // canvas height
         var canvas_height = canvas.height;
         // no of vertical grid lines
-        var num_lines_x = Math.floor(canvas_height/grid_size);
+        var num_lines_x = Math.floor(canvas_height / grid_size);
 
         // no of horizontal grid lines
-        var num_lines_y = Math.floor(canvas_width/grid_size);
+        var num_lines_y = Math.floor(canvas_width / grid_size);
 
-        var lw_grid = 6.5 / 4 / scaler * upscaler;
-        var lw_tick = 1.5 * scaler;
-        var len_tick = 3 * scaler;
+        var lw_grid = 4.9 / 4 / scaler * upscaler;
+        var lw_tick = 2 * scaler;
+        var len_tick = 4 * scaler;
         var text_grid = '35px Arial';
 
         // Draw grid lines along X-axis
-        for(var i=0; i<=num_lines_x; i++) {
+        for (var i = 0; i <= num_lines_x; i++) {
             tp.beginPath();
             tp.lineWidth = lw_grid;
-            
+
             // If line represents X-axis draw in different color
-            if(i == x_axis_distance_grid_lines) 
+            if (i == x_axis_distance_grid_lines)
                 tp.strokeStyle = "#000000";
             else
                 tp.strokeStyle = "#e9e9e9";
-            
-            if(i == num_lines_x) {
-                tp.moveTo(0, yToPixel(grid_size*i));
-                tp.lineTo(canvas_width, yToPixel(grid_size*i));
+
+            if (i == num_lines_x) {
+                tp.moveTo(0, yToPixel(grid_size * i));
+                tp.lineTo(canvas_width, yToPixel(grid_size * i));
             }
             else {
-                tp.moveTo(0, yToPixel(grid_size*i)+0.5);
-                tp.lineTo(canvas_width, yToPixel(grid_size*i)+0.5);
+                tp.moveTo(0, yToPixel(grid_size * i) + 0.5);
+                tp.lineTo(canvas_width, yToPixel(grid_size * i) + 0.5);
             }
             tp.stroke();
         }
 
         // Draw grid lines along Y-axis
-        for(i=0; i<=num_lines_y; i++) {
+        for (i = 0; i <= num_lines_y; i++) {
             tp.beginPath();
             tp.lineWidth = lw_grid;
-            
+
             // If line represents Y-axis draw in different color
-            if(i == y_axis_distance_grid_lines) 
+            if (i == y_axis_distance_grid_lines)
                 tp.strokeStyle = "#000000";
             else
                 tp.strokeStyle = "#e9e9e9";
 
-            if(i == num_lines_y) {
-                tp.moveTo(xToPixel(grid_size*i), 0);
-                tp.lineTo(xToPixel(grid_size*i), canvas_height);
+            if (i == num_lines_y) {
+                tp.moveTo(xToPixel(grid_size * i), 0);
+                tp.lineTo(xToPixel(grid_size * i), canvas_height);
             }
             else {
-                tp.moveTo(xToPixel(grid_size*i)+0.5, 0);
-                tp.lineTo(xToPixel(grid_size*i)+0.5, canvas_height);
+                tp.moveTo(xToPixel(grid_size * i) + 0.5, 0);
+                tp.lineTo(xToPixel(grid_size * i) + 0.5, canvas_height);
             }
             tp.stroke();
         }
 
         // Ticks marks along the positive X-axis
-        for(i=1; i<(num_lines_y - y_axis_distance_grid_lines); i++) {
+        for (i = 1; i < (num_lines_y - y_axis_distance_grid_lines); i++) {
             tp.beginPath();
             tp.lineWidth = lw_tick;
             tp.strokeStyle = "#000000";
 
             // Draw a tick mark 6px long (-3 to 3)
-            tp.moveTo(xToPixel(grid_size*i)+0.5, yToPixel(0)-len_tick);
-            tp.lineTo(xToPixel(grid_size*i)+0.5, yToPixel(0)+len_tick);
+            tp.moveTo(xToPixel(grid_size * i) + 0.5, yToPixel(0) - len_tick);
+            tp.lineTo(xToPixel(grid_size * i) + 0.5, yToPixel(0) + len_tick);
             tp.stroke();
 
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'start';
-            tp.fillText(grid_size*i/10, xToPixel(grid_size*i)-5.5*scaler, yToPixel(0)+4*scaler);
+            tp.fillText(grid_size * i / 10, xToPixel(grid_size * i) - 5.5 * scaler, yToPixel(0) + 10 * scaler);
         }
 
         // Ticks marks along the negative X-axis
-        for(i=1; i<y_axis_distance_grid_lines + 1; i++) {
+        for (i = 1; i < y_axis_distance_grid_lines + 1; i++) {
             tp.beginPath();
             tp.lineWidth = lw_tick;
             tp.strokeStyle = "#000000";
 
             // Draw a tick mark 6px long (-3 to 3)
-            tp.moveTo(xToPixel(-grid_size*i)+0.5, yToPixel(0)-len_tick);
-            tp.lineTo(xToPixel(-grid_size*i)+0.5, yToPixel(0)+len_tick);
+            tp.moveTo(xToPixel(-grid_size * i) + 0.5, yToPixel(0) - len_tick);
+            tp.lineTo(xToPixel(-grid_size * i) + 0.5, yToPixel(0) + len_tick);
             tp.stroke();
 
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'end';
-            //tp.fillText(grid_size*i/10, xToPixel(grid_size*i)-6*scaler, yToPixel(0)+15*scaler);
+            tp.fillText(grid_size * i / 10, -xToPixel(grid_size * i) - 5.5 * scaler, yToPixel(0) + 10 * scaler);
         }
 
         // Ticks marks along the positive Y-axis
         // Positive Y-axis of graph is negative Y-axis of the canvas
-        for(i=1; i<(num_lines_x - x_axis_distance_grid_lines) + 1; i++) {
+        for (i = 1; i < (num_lines_x - x_axis_distance_grid_lines) + 1; i++) {
             tp.beginPath();
             tp.lineWidth = lw_tick;
             tp.strokeStyle = "#000000";
 
             // Draw a tick mark 6px long (-3 to 3)
-            tp.moveTo(xToPixel(0)-len_tick, yToPixel(grid_size*i)+0.5);
-            tp.lineTo(xToPixel(0)+len_tick, yToPixel(grid_size*i)+0.5);
+            tp.moveTo(xToPixel(0) - len_tick, yToPixel(grid_size * i) + 0.5);
+            tp.lineTo(xToPixel(0) + len_tick, yToPixel(grid_size * i) + 0.5);
             tp.stroke();
 
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'start';
-            tp.fillText(grid_size*i/10, xToPixel(0)+5*scaler,yToPixel(grid_size*i)-6*scaler);
+            tp.fillText(grid_size * i / 10, xToPixel(0) - 25 * scaler, yToPixel(grid_size * i) - 6 * scaler);
         }
 
         // Ticks marks along the negative Y-axis
         // Negative Y-axis of graph is positive Y-axis of the canvas
-        for(i=1; i<x_axis_distance_grid_lines + 1; i++) {
+        for (i = 1; i < x_axis_distance_grid_lines + 1; i++) {
             tp.beginPath();
             tp.lineWidth = lw_tick;
             tp.strokeStyle = "#000000";
 
             // Draw a tick mark 6px long (-3 to 3)
-            tp.moveTo(xToPixel(0)-len_tick, yToPixel(-grid_size*i)+0.5);
-            tp.lineTo(xToPixel(0)+len_tick, yToPixel(-grid_size*i)+0.5);
+            tp.moveTo(xToPixel(0) - len_tick, yToPixel(-grid_size * i) + 0.5);
+            tp.lineTo(xToPixel(0) + len_tick, yToPixel(-grid_size * i) + 0.5);
             tp.stroke();
 
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'start';
-            tp.fillText(-grid_size*i/10, xToPixel(0)+5*scaler,yToPixel(-grid_size*i)+6*scaler);
+            tp.fillText(-grid_size * i / 10, xToPixel(0) - 25 * scaler, yToPixel(-grid_size * i) + 6 * scaler);
         }
 
         //tp.translate(y_axis_distance_grid_lines*grid_size, x_axis_distance_grid_lines*grid_size);
@@ -206,10 +206,10 @@ $(function() {
     var xOffset = 0;
     var yOffset = 0;
     var scaler = 1;
-    var xToPixel = function(x) { return scaler * x + xOffset; }
-    var yToPixel = function(y) { return -scaler * y + yOffset; }
+    var xToPixel = function (x) { return scaler * x + xOffset; }
+    var yToPixel = function (y) { return -scaler * y + yOffset; }
 
-    var transformCanvas = function() {
+    var transformCanvas = function () {
         toolSave = null;
         if (rect == undefined) {
             rect = canvas.parentNode.getBoundingClientRect();
@@ -221,7 +221,7 @@ $(function() {
         }
 
         // Reset the transform and clear the canvas
-        tp.setTransform(1,0,0,1,0,0);
+        tp.setTransform(1, 0, 0, 1, 0, 0);
         tp.fillStyle = "white";
         tp.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -247,18 +247,18 @@ $(function() {
             imageHeight = 1;
         }
         var shrink = 0.90;
-        inset = 15 * upscaler;
-        var scaleX = (canvas.width - inset*2) / imageWidth;
-        var scaleY = (canvas.height - inset*2) / imageHeight;
+        inset = 20 * upscaler;
+        var scaleX = (canvas.width - inset) / imageWidth;
+        var scaleY = (canvas.height - inset) / imageHeight;
         var minScale = Math.min(scaleX, scaleY);
 
         scaler = minScale * shrink;
         if (scaler < 0) {
             scaler = -scaler;
         }
-        
+
         xOffset = inset - bbox.min.x * scaler;
-        yOffset = (canvas.height-inset) - bbox.min.y * (-scaler);
+        yOffset = (canvas.height - inset) - bbox.min.y * (-scaler);
 
         // Canvas coordinates of image bounding box top and right
         var imageTop = scaler * imageHeight;
@@ -271,15 +271,15 @@ $(function() {
         tp.font = "14px Ariel";
         tp.textAlign = "center";
         tp.textBaseline = "bottom";
-        tp.fillText(formatLimit(bbox.min.y), imageRight/2, canvas.height-inset);
+        tp.fillText(formatLimit(bbox.min.y), imageRight / 2, canvas.height - inset);
         tp.textBaseline = "top";
-        tp.fillText(formatLimit(bbox.max.y), imageRight/2, canvas.height-inset - imageTop);
+        tp.fillText(formatLimit(bbox.max.y), imageRight / 2, canvas.height - inset - imageTop);
         tp.textAlign = "left";
         tp.textBaseline = "center";
-        tp.fillText(formatLimit(bbox.min.x), inset, canvas.height-inset - imageTop/2);
+        tp.fillText(formatLimit(bbox.min.x), inset, canvas.height - inset - imageTop / 2);
         tp.textAlign = "right";
         tp.textBaseline = "center";
-        tp.fillText(formatLimit(bbox.max.x), inset+imageRight, canvas.height-inset - imageTop/2);
+        tp.fillText(formatLimit(bbox.max.x), inset + imageRight, canvas.height - inset - imageTop / 2);
         // Transform the path coordinate system so the image fills the canvas
         // with a small inset, and +Y goes upward.
         // The net transform from image space (x,y) to pixel space (x',y') is:
@@ -291,18 +291,18 @@ $(function() {
         // transform matrix.
 
         drawOrigin();
-        tp.lineWidth = 5.5 / 4 / scaler * upscaler;
+        tp.lineWidth = 4.6 / 4 / scaler * upscaler;
         tp.setTransform(scaler, 0, 0, -scaler, xOffset, yOffset);
 
     }
-    var wrappedDegrees = function(radians) {
+    var wrappedDegrees = function (radians) {
         var degrees = radians * 180 / Math.PI;
         return degrees >= 0 ? degrees : degrees + 360;
     }
 
     var bboxHandlersL = {
-        addLine: function(modal, start, end) {
-	    // Update units in case it changed in a previous line
+        addLine: function (modal, start, end) {
+            // Update units in case it changed in a previous line
             units = modal.units;
 
             bbox.min.x = Math.min(bbox.min.x, start.z, end.z, start.x, end.x);
@@ -311,13 +311,13 @@ $(function() {
             bbox.max.y = Math.max(bbox.max.y, start.a, end.a, start.y, end.y);
             bboxIsSet = true;
         },
-        addArcCurve: function(modal, start, end, center) {
+        addArcCurve: function (modal, start, end, center) {
             // To determine the precise bounding box of a circular arc we
-	    // must account for the possibility that the arc crosses one or
-	    // more axes.  If so, the bounding box includes the "bulges" of
-	    // the arc across those axes.
+            // must account for the possibility that the arc crosses one or
+            // more axes.  If so, the bounding box includes the "bulges" of
+            // the arc across those axes.
 
-	    // Update units in case it changed in a previous line
+            // Update units in case it changed in a previous line
             units = modal.units;
 
             if (modal.motion == 'G2') {  // clockwise
@@ -326,110 +326,110 @@ $(function() {
                 end = tmp;
             }
 
-	    // Coordinates relative to the center of the arc
-	    var sx = start.z - center.z;
-	    var sy = start.a - center.a;
-	    var ex = end.z - center.z;
-	    var ey = end.a - center.a;
+            // Coordinates relative to the center of the arc
+            var sx = start.z - center.z;
+            var sy = start.a - center.a;
+            var ex = end.z - center.z;
+            var ey = end.a - center.a;
 
             var radius = Math.hypot(sx, sy);
 
-	    // Axis crossings - plus and minus x and y
-	    var px = false;
-	    var py = false;
-	    var mx = false;
-	    var my = false;
+            // Axis crossings - plus and minus x and y
+            var px = false;
+            var py = false;
+            var mx = false;
+            var my = false;
 
-	    // There are ways to express this decision tree in fewer lines
-	    // of code by converting to alternate representations like angles,
-	    // but this way is probably the most computationally efficient.
-	    // It avoids any use of transcendental functions.  Every path
-	    // through this decision tree is either 4 or 5 simple comparisons.
-	    if (ey >= 0) {              // End in upper half plane
-		if (ex > 0) {             // End in quadrant 0 - X+ Y+
-		    if (sy >= 0) {          // Start in upper half plane
-			if (sx > 0) {         // Start in quadrant 0 - X+ Y+
-			    if (sx <= ex) {     // wraparound
-				px = py = mx = my = true;
-			    }
-			} else {              // Start in quadrant 1 - X- Y+
-			    mx = my = px = true;
-			}
-		    } else {                // Start in lower half plane
-			if (sx > 0) {         // Start in quadrant 3 - X+ Y-
-			    px = true;
-			} else {              // Start in quadrant 2 - X- Y-
-			    my = px = true;
-			}
-		    }
-		} else {                  // End in quadrant 1 - X- Y+
-		    if (sy >= 0) {          // Start in upper half plane
-			if (sx > 0) {         // Start in quadrant 0 - X+ Y+
-			    py = true;
-			} else {              // Start in quadrant 1 - X- Y+
-			    if (sx <= ex) {     // wraparound
-				px = py = mx = my = true;
-			    }
-			}
-		    } else {                // Start in lower half plane
-			if (sx > 0) {         // Start in quadrant 3 - X+ Y-
-			    px = py = true;
-			} else {              // Start in quadrant 2 - X- Y-
-			    my = px = py = true;
-			}
-		    }
-		}
-	    } else {                    // ey < 0 - end in lower half plane
-		if (ex > 0) {             // End in quadrant 3 - X+ Y+
-		    if (sy >= 0) {          // Start in upper half plane
-			if (sx > 0) {         // Start in quadrant 0 - X+ Y+
-			    py = mx = my = true;
-			} else {              // Start in quadrant 1 - X- Y+
-			    mx = my = true;
-			}
-		    } else {                // Start in lower half plane
-			if (sx > 0) {         // Start in quadrant 3 - X+ Y-
-			    if (sx >= ex) {      // wraparound
-				px = py = mx = my = true;
-			    }
-			} else {              // Start in quadrant 2 - X- Y-
-			    my = true;
-			}
-		    }
-		} else {                  // End in quadrant 2 - X- Y+
-		    if (sy >= 0) {          // Start in upper half plane
-			if (sx > 0) {         // Start in quadrant 0 - X+ Y+
-			    py = mx = true;
-			} else {              // Start in quadrant 1 - X- Y+
-			    mx = true;
-			}
-		    } else {                // Start in lower half plane
-			if (sx > 0) {         // Start in quadrant 3 - X+ Y-
-			    px = py = mx = true;
-			} else {              // Start in quadrant 2 - X- Y-
-			    if (sx >= ex) {      // wraparound
-				px = py = mx = my = true;
-			    }
-			}
-		    }
-		}
-	    }
-	    var maxX = px ? center.z + radius : Math.max(start.z, end.z);
-	    var maxY = py ? center.a + radius : Math.max(start.a, end.a);
-	    var minX = mx ? center.z - radius : Math.min(start.z, end.z);
-	    var minY = my ? center.a - radius : Math.min(start.a, end.a);
+            // There are ways to express this decision tree in fewer lines
+            // of code by converting to alternate representations like angles,
+            // but this way is probably the most computationally efficient.
+            // It avoids any use of transcendental functions.  Every path
+            // through this decision tree is either 4 or 5 simple comparisons.
+            if (ey >= 0) {              // End in upper half plane
+                if (ex > 0) {             // End in quadrant 0 - X+ Y+
+                    if (sy >= 0) {          // Start in upper half plane
+                        if (sx > 0) {         // Start in quadrant 0 - X+ Y+
+                            if (sx <= ex) {     // wraparound
+                                px = py = mx = my = true;
+                            }
+                        } else {              // Start in quadrant 1 - X- Y+
+                            mx = my = px = true;
+                        }
+                    } else {                // Start in lower half plane
+                        if (sx > 0) {         // Start in quadrant 3 - X+ Y-
+                            px = true;
+                        } else {              // Start in quadrant 2 - X- Y-
+                            my = px = true;
+                        }
+                    }
+                } else {                  // End in quadrant 1 - X- Y+
+                    if (sy >= 0) {          // Start in upper half plane
+                        if (sx > 0) {         // Start in quadrant 0 - X+ Y+
+                            py = true;
+                        } else {              // Start in quadrant 1 - X- Y+
+                            if (sx <= ex) {     // wraparound
+                                px = py = mx = my = true;
+                            }
+                        }
+                    } else {                // Start in lower half plane
+                        if (sx > 0) {         // Start in quadrant 3 - X+ Y-
+                            px = py = true;
+                        } else {              // Start in quadrant 2 - X- Y-
+                            my = px = py = true;
+                        }
+                    }
+                }
+            } else {                    // ey < 0 - end in lower half plane
+                if (ex > 0) {             // End in quadrant 3 - X+ Y+
+                    if (sy >= 0) {          // Start in upper half plane
+                        if (sx > 0) {         // Start in quadrant 0 - X+ Y+
+                            py = mx = my = true;
+                        } else {              // Start in quadrant 1 - X- Y+
+                            mx = my = true;
+                        }
+                    } else {                // Start in lower half plane
+                        if (sx > 0) {         // Start in quadrant 3 - X+ Y-
+                            if (sx >= ex) {      // wraparound
+                                px = py = mx = my = true;
+                            }
+                        } else {              // Start in quadrant 2 - X- Y-
+                            my = true;
+                        }
+                    }
+                } else {                  // End in quadrant 2 - X- Y+
+                    if (sy >= 0) {          // Start in upper half plane
+                        if (sx > 0) {         // Start in quadrant 0 - X+ Y+
+                            py = mx = true;
+                        } else {              // Start in quadrant 1 - X- Y+
+                            mx = true;
+                        }
+                    } else {                // Start in lower half plane
+                        if (sx > 0) {         // Start in quadrant 3 - X+ Y-
+                            px = py = mx = true;
+                        } else {              // Start in quadrant 2 - X- Y-
+                            if (sx >= ex) {      // wraparound
+                                px = py = mx = my = true;
+                            }
+                        }
+                    }
+                }
+            }
+            var maxX = px ? center.z + radius : Math.max(start.z, end.z);
+            var maxY = py ? center.a + radius : Math.max(start.a, end.a);
+            var minX = mx ? center.z - radius : Math.min(start.z, end.z);
+            var minY = my ? center.a - radius : Math.min(start.a, end.a);
 
-	    bbox.min.x = Math.min(bbox.min.x, minX);
-	    bbox.min.y = Math.min(bbox.min.y, minY);
-	    bbox.max.x = Math.max(bbox.max.x, maxX);
-	    bbox.max.y = Math.max(bbox.max.y, maxY);
+            bbox.min.x = Math.min(bbox.min.x, minX);
+            bbox.min.y = Math.min(bbox.min.y, minY);
+            bbox.max.x = Math.max(bbox.max.x, maxX);
+            bbox.max.y = Math.max(bbox.max.y, maxY);
             bboxIsSet = true;
-	}
+        }
     };
 
     var initialMovesL = true;
     var displayHandlersL = {
-        addLine: function(modal, start, end) {
+        addLine: function (modal, start, end) {
             var motion = modal.motion;
             if (motion == 'G0') {
                 tp.strokeStyle = initialMovesL ? 'red' : 'green';
@@ -447,7 +447,7 @@ $(function() {
             tp.lineTo(end.z, end.a);
             tp.stroke();
         },
-        addArcCurve: function(modal, start, end, center) {
+        addArcCurve: function (modal, start, end, center) {
             var motion = modal.motion;
 
             var deltaX1 = start.z - center.z;
@@ -457,9 +457,9 @@ $(function() {
             var deltaY2 = end.a - center.a;
             var theta1 = Math.atan2(deltaY1, deltaX1);
             var theta2 = Math.atan2(deltaY2, deltaX2);
-	    if (theta1 == theta2) {
-		theta2 += Math.PI * ((modal.motion == "G2") ? -2 : 2);
-	    }
+            if (theta1 == theta2) {
+                theta2 += Math.PI * ((modal.motion == "G2") ? -2 : 2);
+            }
 
             initialMovesL = false;
 
@@ -470,12 +470,12 @@ $(function() {
         },
     };
 
-    var ToolpathDisplayerL = function() {
+    var ToolpathDisplayerL = function () {
     };
 
     var offset;
 
-    ToolpathDisplayerL.prototype.showToolpathL = function(gcode, wpos, mpos) {
+    ToolpathDisplayerL.prototype.showToolpathL = function (gcode, wpos, mpos) {
         inInches = $('[data-route="workspace"] [id="units"]').text() != 'mm';
 
         var factor = 1.0;
@@ -517,7 +517,7 @@ $(function() {
         drawTool(initialPosition);
     };
 
-    ToolpathDisplayerL.prototype.reDrawToolL = function(modal, wpos) {
+    ToolpathDisplayerL.prototype.reDrawToolL = function (modal, wpos) {
         if (toolSave != null) {
             tp.putImageData(toolSave, toolX, toolY);
             var factor = 1.0;

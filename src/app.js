@@ -6,6 +6,7 @@ const MACHINE_STOP = 1;
 const MACHINE_IDLE = 2;
 const MACHINE_RUN = 3;
 const MACHINE_HOLD = 4;
+const MACHINE_SLEEP = 5;
 
 var root = window;
 var cnc = root.cnc || {};
@@ -497,6 +498,13 @@ function setMachineWorkflow(stateName) {
         if (senderHold && senderHoldReason !== '%wait') {
 	    stateName = senderHoldReason;
         }
+    }   else if (stateName == 'Sleep') {
+        machineWorkflow = MACHINE_SLEEP;
+        // M0 goes to HOLD state
+        if (senderHold && senderHoldReason !== '%wait') {
+            machineWorkflow = MACHINE_HOLD;
+	        stateName = senderHoldReason;
+        }
     } else {
         machineWorkflow = MACHINE_RUN;
     }
@@ -513,7 +521,7 @@ function renderGrblState(data) {
     mpos = status.mpos;
     wpos = status.wpos;
 
-    console.log(wpos, "wpos");
+    //console.log(wpos, "wpos");
 
     // Grbl states are Idle, Run, Jog, Hold
     // The code used to allow click in Run state but that seems wrong
@@ -888,9 +896,23 @@ cnc.updateView = function() {
     //	canStart = false;
     //}
 
-    var cannotClick = machineWorkflow > MACHINE_IDLE;
-    $('[data-route="workspace"] .control-pad .jog-controls .btn').prop('disabled', cannotClick);
+    if (machineWorkflow === MACHINE_SLEEP){
+        document.getElementById("sleep-btn").style.backgroundColor = "red";
+    }else{
+        document.getElementById("sleep-btn").style.backgroundColor = "white";
+    }
+
+    if (machineWorkflow === MACHINE_HOLD){
+        document.getElementById("unlock-btn").style.backgroundColor = "orange";
+    }else{
+        document.getElementById("unlock-btn").style.backgroundColor = "white";
+    }
+    
+    var cannotClickJog = machineWorkflow > MACHINE_IDLE && machineWorkflow != MACHINE_RUN;
+    $('[data-route="workspace"] .control-pad .jog-controls .btn').prop('disabled', cannotClickJog);
     $('[data-route="workspace"] .control-pad .form-control').prop('disabled', cannotClick);
+
+    var cannotClick = machineWorkflow > MACHINE_IDLE;
     $('[data-route="workspace"] .mdi .btn').prop('disabled', cannotClick);
     $('[data-route="workspace"] .axis-position .btn').prop('disabled', cannotClick);
     $('[data-route="workspace"] .axis-position .position').prop('disabled', cannotClick);
@@ -930,6 +952,10 @@ cnc.updateView = function() {
     case MACHINE_RUN:
         setLeftButton(false, gray, 'Start', null);
         setRightButton(true, red, 'Pause', pauseGCode);
+        break;
+    case MACHINE_SLEEP:
+        setLeftButton(false, gray, 'Start', null);
+        setRightButton(false, gray, 'Pause', null);
         break;
     }
 
@@ -1134,7 +1160,7 @@ cnc.showGCode = function(name, gcode) {
     $('[data-route="workspace"] [id="gcode"]').text(gcode);
     if (gCodeLoaded) {
         
-        console.log(wpos, "wpos2");
+        //console.log(wpos, "wpos2");
         root.displayerL.showToolpathL(gcode, wpos, mpos);
         root.displayerR.showToolpathR(gcode, wpos, mpos);
     }
