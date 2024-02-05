@@ -5,7 +5,7 @@
 $(function() {
     var root = window;
 
-    var canvas = document.getElementById("small-toolpath");
+    var canvas = document.getElementById("small-toolpath-R");
     var tp = canvas.getContext("2d");
     var rect;
 
@@ -43,7 +43,7 @@ $(function() {
     var toolX = null;
     var toolY = null;
     var toolSave = null;
-    var toolRadius = 6;
+    var toolRadius = 4;
     var toolRectWH = toolRadius*2 + 4;  // Slop to encompass the entire image area
 
     var drawTool = function(pos) {
@@ -339,7 +339,7 @@ $(function() {
 
     var offset;
 
-    ToolpathDisplayer.prototype.showToolpath = function(gcode, wpos, mpos) {
+    ToolpathDisplayer.prototype.showToolpathR = function(gcode, wpos, mpos) {
         inInches = $('[data-route="workspace"] [id="units"]').text() != 'mm';
 
         var factor = inInches ? 25.4 : 1.0;
@@ -378,7 +378,7 @@ $(function() {
         drawTool(initialPosition);
     };
 
-    ToolpathDisplayer.prototype.reDrawTool = function(modal, mpos) {
+    ToolpathDisplayer.prototype.reDrawToolR = function(modal, mpos) {
         if (toolSave != null) {
             tp.putImageData(toolSave, toolX, toolY);
             var factor = modal.units === 'G20' ? 25.4 : 1.0;
@@ -393,5 +393,5 @@ $(function() {
     }
 
 
-    root.displayer = new ToolpathDisplayer();
+    root.displayerR = new ToolpathDisplayer();
 });

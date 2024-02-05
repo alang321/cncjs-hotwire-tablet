@@ -887,7 +887,8 @@ cnc.updateView = function() {
         $('[data-route="workspace"] [id="line"]').text(receivedLines);
         scrollToLine(receivedLines);
     }
-    root.displayer.reDrawTool(modal, mpos);
+    root.displayerL.reDrawToolL(modal, mpos);
+    root.displayerR.reDrawToolR(modal, mpos);
 
     var digits = modal.units == 'G20' ? 4 : 3;
     var dmpos = {
@@ -1040,7 +1041,8 @@ cnc.showGCode = function(name, gcode) {
     }
     $('[data-route="workspace"] [id="gcode"]').text(gcode);
     if (gCodeLoaded) {
-        root.displayer.showToolpath(gcode, wpos, mpos);
+        root.displayerL.showToolpathL(gcode, wpos, mpos);
+        root.displayerR.showToolpathR(gcode, wpos, mpos);
     }
     if (machineWorkflow != MACHINE_STALL) {
         cnc.updateView();

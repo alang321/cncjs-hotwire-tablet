@@ -46,13 +46,15 @@ var Toolpath = function () {
         this.g92offset = {
             x: 0,
             y: 0,
-            z: 0
+            z: 0,
+            a: 0
         };
         function offsetG92(pos) {
             return {
                 x: pos.x + _this.g92offset.x,
                 y: pos.y + _this.g92offset.y,
                 z: pos.z + _this.g92offset.z,
+                z: pos.a + _this.g92offset.a
             }
         }
         function offsetAddLine(start, end) {
@@ -64,7 +66,8 @@ var Toolpath = function () {
         this.position = {
             x: 0,
             y: 0,
-            z: 0
+            z: 0,
+            a: 0
         };
         this.modal = {
             // Motion Mode
@@ -126,19 +129,21 @@ var Toolpath = function () {
                 var v1 = {
                     x: _this.position.x,
                     y: _this.position.y,
-                    z: _this.position.z
+                    z: _this.position.z,
+                    z: _this.position.a
                 };
                 var v2 = {
                     x: _this.translateX(params.X),
                     y: _this.translateY(params.Y),
-                    z: _this.translateZ(params.Z)
+                    z: _this.translateZ(params.Z),
+                    z: _this.translateZ(params.A)
                 };
-                var targetPosition = { x: v2.x, y: v2.y, z: v2.z };
+                var targetPosition = { x: v2.x, y: v2.y, z: v2.z, z: v2.a };
 
                 offsetAddLine(v1, v2);
 
                 // Update position
-                _this.setPosition(targetPosition.x, targetPosition.y, targetPosition.z);
+                _this.setPosition(targetPosition.x, targetPosition.y, targetPosition.z, targetPosition.a);
             },
             // G1: Linear Move
             // Usage
@@ -162,19 +167,21 @@ var Toolpath = function () {
                 var v1 = {
                     x: _this.position.x,
                     y: _this.position.y,
-                    z: _this.position.z
+                    z: _this.position.z,
+                    a: _this.position.a
                 };
                 var v2 = {
                     x: _this.translateX(params.X),
                     y: _this.translateY(params.Y),
-                    z: _this.translateZ(params.Z)
+                    z: _this.translateZ(params.Z),
+                    a: _this.translateZ(params.A)
                 };
-                var targetPosition = { x: v2.x, y: v2.y, z: v2.z };
+                var targetPosition = { x: v2.x, y: v2.y, z: v2.z, a: v2.a };
 
                 offsetAddLine(v1, v2);
 
                 // Update position
-                _this.setPosition(targetPosition.x, targetPosition.y, targetPosition.z);
+                _this.setPosition(targetPosition.x, targetPosition.y, targetPosition.z, targetPosition.a);
             },
             // G2 & G3: Controlled Arc Move
             // Usage
@@ -195,196 +202,10 @@ var Toolpath = function () {
             //   http://linuxcnc.org/docs/2.5/html/gcode/gcode.html#sec:G2-G3-Arc
             //   https://github.com/grbl/grbl/issues/236
             'G2': function G2(params) {
-                if (_this.modal.motion !== 'G2') {
-                    _this.setModal({ motion: 'G2' });
-                }
-
-                var v1 = {
-                    x: _this.position.x,
-                    y: _this.position.y,
-                    z: _this.position.z
-                };
-                var v2 = {
-                    x: _this.translateX(params.X),
-                    y: _this.translateY(params.Y),
-                    z: _this.translateZ(params.Z)
-                };
-                var v0 = { // fixed point
-                    x: _this.translateI(params.I),
-                    y: _this.translateJ(params.J),
-                    z: _this.translateK(params.K)
-                };
-                var isClockwise = true;
-                var targetPosition = { x: v2.x, y: v2.y, z: v2.z };
-
-                if (_this.isXYPlane()) {
-                    var _ref = [v1.x, v1.y, v1.z]; // XY-plane
-
-                    v1.x = _ref[0];
-                    v1.y = _ref[1];
-                    v1.z = _ref[2];
-                    var _ref2 = [v2.x, v2.y, v2.z];
-                    v2.x = _ref2[0];
-                    v2.y = _ref2[1];
-                    v2.z = _ref2[2];
-                    var _ref3 = [v0.x, v0.y, v0.z];
-                    v0.x = _ref3[0];
-                    v0.y = _ref3[1];
-                    v0.z = _ref3[2];
-                } else if (_this.isZXPlane()) {
-                    var _ref4 = [v1.z, v1.x, v1.y]; // ZX-plane
-
-                    v1.x = _ref4[0];
-                    v1.y = _ref4[1];
-                    v1.z = _ref4[2];
-                    var _ref5 = [v2.z, v2.x, v2.y];
-                    v2.x = _ref5[0];
-                    v2.y = _ref5[1];
-                    v2.z = _ref5[2];
-                    var _ref6 = [v0.z, v0.x, v0.y];
-                    v0.x = _ref6[0];
-                    v0.y = _ref6[1];
-                    v0.z = _ref6[2];
-                } else if (_this.isYZPlane()) {
-                    var _ref7 = [v1.y, v1.z, v1.x]; // YZ-plane
-
-                    v1.x = _ref7[0];
-                    v1.y = _ref7[1];
-                    v1.z = _ref7[2];
-                    var _ref8 = [v2.y, v2.z, v2.x];
-                    v2.x = _ref8[0];
-                    v2.y = _ref8[1];
-                    v2.z = _ref8[2];
-                    var _ref9 = [v0.y, v0.z, v0.x];
-                    v0.x = _ref9[0];
-                    v0.y = _ref9[1];
-                    v0.z = _ref9[2];
-                } else {
-                    console.error('The plane mode is invalid', _this.modal.plane);
-                    return;
-                }
-
-                if (params.R) {
-                    var radius = _this.translateR(Number(params.R) || 0);
-                    var x = v2.x - v1.x;
-                    var y = v2.y - v1.y;
-                    var distance = Math.sqrt(x * x + y * y);
-                    var height = Math.sqrt(4 * radius * radius - x * x - y * y) / 2;
-
-                    if (isClockwise) {
-                        height = -height;
-                    }
-                    if (radius < 0) {
-                        height = -height;
-                    }
-
-                    var offsetX = x / 2 - y / distance * height;
-                    var offsetY = y / 2 + x / distance * height;
-
-                    v0.x = v1.x + offsetX;
-                    v0.y = v1.y + offsetY;
-                }
-
-                offsetAddArcCurve(v1, v2, v0);
-
-                // Update position
-                _this.setPosition(targetPosition.x, targetPosition.y, targetPosition.z);
+                console.error('Arcs are not yet supported in 4 axis grblHAL.');
             },
             'G3': function G3(params) {
-                if (_this.modal.motion !== 'G3') {
-                    _this.setModal({ motion: 'G3' });
-                }
-
-                var v1 = {
-                    x: _this.position.x,
-                    y: _this.position.y,
-                    z: _this.position.z
-                };
-                var v2 = {
-                    x: _this.translateX(params.X),
-                    y: _this.translateY(params.Y),
-                    z: _this.translateZ(params.Z)
-                };
-                var v0 = { // fixed point
-                    x: _this.translateI(params.I),
-                    y: _this.translateJ(params.J),
-                    z: _this.translateK(params.K)
-                };
-                var isClockwise = false;
-                var targetPosition = { x: v2.x, y: v2.y, z: v2.z };
-
-                if (_this.isXYPlane()) {
-                    var _ref10 = [v1.x, v1.y, v1.z]; // XY-plane
-
-                    v1.x = _ref10[0];
-                    v1.y = _ref10[1];
-                    v1.z = _ref10[2];
-                    var _ref11 = [v2.x, v2.y, v2.z];
-                    v2.x = _ref11[0];
-                    v2.y = _ref11[1];
-                    v2.z = _ref11[2];
-                    var _ref12 = [v0.x, v0.y, v0.z];
-                    v0.x = _ref12[0];
-                    v0.y = _ref12[1];
-                    v0.z = _ref12[2];
-                } else if (_this.isZXPlane()) {
-                    var _ref13 = [v1.z, v1.x, v1.y]; // ZX-plane
-
-                    v1.x = _ref13[0];
-                    v1.y = _ref13[1];
-                    v1.z = _ref13[2];
-                    var _ref14 = [v2.z, v2.x, v2.y];
-                    v2.x = _ref14[0];
-                    v2.y = _ref14[1];
-                    v2.z = _ref14[2];
-                    var _ref15 = [v0.z, v0.x, v0.y];
-                    v0.x = _ref15[0];
-                    v0.y = _ref15[1];
-                    v0.z = _ref15[2];
-                } else if (_this.isYZPlane()) {
-                    var _ref16 = [v1.y, v1.z, v1.x]; // YZ-plane
-
-                    v1.x = _ref16[0];
-                    v1.y = _ref16[1];
-                    v1.z = _ref16[2];
-                    var _ref17 = [v2.y, v2.z, v2.x];
-                    v2.x = _ref17[0];
-                    v2.y = _ref17[1];
-                    v2.z = _ref17[2];
-                    var _ref18 = [v0.y, v0.z, v0.x];
-                    v0.x = _ref18[0];
-                    v0.y = _ref18[1];
-                    v0.z = _ref18[2];
-                } else {
-                    console.error('The plane mode is invalid', _this.modal.plane);
-                    return;
-                }
-
-                if (params.R) {
-                    var radius = _this.translateR(Number(params.R) || 0);
-                    var x = v2.x - v1.x;
-                    var y = v2.y - v1.y;
-                    var distance = Math.sqrt(x * x + y * y);
-                    var height = Math.sqrt(4 * radius * radius - x * x - y * y) / 2;
-
-                    if (isClockwise) {
-                        height = -height;
-                    }
-                    if (radius < 0) {
-                        height = -height;
-                    }
-
-                    var offsetX = x / 2 - y / distance * height;
-                    var offsetY = y / 2 + x / distance * height;
-
-                    v0.x = v1.x + offsetX;
-                    v0.y = v1.y + offsetY;
-                }
-
-                offsetAddArcCurve(v1, v2, v0);
-
-                // Update position
-                _this.setPosition(targetPosition.x, targetPosition.y, targetPosition.z);
+                console.error('Arcs are not yet supported in 4 axis grblHAL.');
             },
             // G4: Dwell
             // Parameters
@@ -698,9 +519,10 @@ var Toolpath = function () {
             var _position = _extends({}, position),
                 x = _position.x,
                 y = _position.y,
-                z = _position.z;
+                z = _position.z,
+                a = _position.a;
 
-            this.setPosition(x, y, z);
+            this.setPosition(x, y, z, a);
         }
         this.g92offset.x = this.g92offset.y = this.g92offset.z = 0;
 
@@ -787,19 +609,23 @@ var Toolpath = function () {
                 var _pos$ = _extends({}, pos[0]),
                     x = _pos$.x,
                     y = _pos$.y,
-                    z = _pos$.z;
+                    z = _pos$.z,
+                    a = _pos$.a;
 
                 this.position.x = typeof x === 'number' ? x : this.position.x;
                 this.position.y = typeof y === 'number' ? y : this.position.y;
                 this.position.z = typeof z === 'number' ? z : this.position.z;
+                this.position.a = typeof a === 'number' ? a : this.position.a;
             } else {
                 var _x = pos[0],
                     _y = pos[1],
-                    _z = pos[2];
+                    _z = pos[2],
+                    _a = pos[3];
 
                 this.position.x = typeof _x === 'number' ? _x : this.position.x;
                 this.position.y = typeof _y === 'number' ? _y : this.position.y;
                 this.position.z = typeof _z === 'number' ? _z : this.position.z;
+                this.position.a = typeof _a === 'number' ? _a : this.position.a;
             }
         }
     }, {

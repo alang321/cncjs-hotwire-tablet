@@ -164,7 +164,12 @@
   padding-bottom: 0px;
 }
 
-[data-route="workspace"] #small-toolpath {
+[data-route="workspace"] #small-toolpath-L {
+  width: 180px;
+  height: 100px;
+}
+
+[data-route="workspace"] #small-toolpath-R {
   width: 180px;
   height: 100px;
 }
@@ -199,7 +204,11 @@
   [data-route="workspace"] textarea {
     font-size: 9px;
   }
-  [data-route="workspace"] #small-toolpath {
+  [data-route="workspace"] #small-toolpath-L {
+      width: 180px;
+      height: 100px;
+  }
+  [data-route="workspace"] #small-toolpath-R {
       width: 180px;
       height: 100px;
   }
@@ -235,7 +244,11 @@
   [data-route="workspace"] textarea {
     font-size: 11px;
   }
-  [data-route="workspace"] #small-toolpath {
+  [data-route="workspace"] #small-toolpath-L {
+      width: 230px;
+      height: 130px;
+  }
+  [data-route="workspace"] #small-toolpath-R {
       width: 230px;
       height: 130px;
   }
@@ -267,7 +280,11 @@
   [data-route="workspace"] textarea {
     font-size: 12px;
   }
-  [data-route="workspace"] #small-toolpath {
+  [data-route="workspace"] #small-toolpath-L {
+      width: 250px;
+      height: 130px;
+  }
+  [data-route="workspace"] #small-toolpath-R {
       width: 250px;
       height: 130px;
   }
@@ -299,19 +316,31 @@
   [data-route="workspace"] textarea {
     font-size: 15px;
   }
-  [data-route="workspace"] #small-toolpath {
+  [data-route="workspace"] #small-toolpath-L {
+      width: 300px;
+      height: 160px;
+  }
+  [data-route="workspace"] #small-toolpath-R {
       width: 300px;
       height: 160px;
   }
 }
 @media (min-width: 1500px) {
-  [data-route="workspace"] #small-toolpath {
+  [data-route="workspace"] #small-toolpath-L {
+      width: 360px;
+      height: 180px;
+  }
+  [data-route="workspace"] #small-toolpath-R {
       width: 360px;
       height: 180px;
   }
 }
 @media (min-width: 1800px) {
-  [data-route="workspace"] #small-toolpath {
+  [data-route="workspace"] #small-toolpath-L {
+      width: 460px;
+      height: 190px;
+  }
+  [data-route="workspace"] #small-toolpath-R {
       width: 460px;
       height: 190px;
   }
