@@ -54,7 +54,7 @@ var Toolpath = function () {
                 x: pos.x + _this.g92offset.x,
                 y: pos.y + _this.g92offset.y,
                 z: pos.z + _this.g92offset.z,
-                z: pos.a + _this.g92offset.a
+                a: pos.a + _this.g92offset.a
             }
         }
         function offsetAddLine(start, end) {
@@ -126,21 +126,27 @@ var Toolpath = function () {
                     _this.setModal({ motion: 'G0' });
                 }
 
+
+                
+
                 var v1 = {
                     x: _this.position.x,
                     y: _this.position.y,
                     z: _this.position.z,
-                    z: _this.position.a
+                    a: _this.position.a
                 };
                 var v2 = {
                     x: _this.translateX(params.X),
                     y: _this.translateY(params.Y),
                     z: _this.translateZ(params.Z),
-                    z: _this.translateZ(params.A)
+                    a: _this.translateZ(params.A)
                 };
-                var targetPosition = { x: v2.x, y: v2.y, z: v2.z, z: v2.a };
+                var targetPosition = { x: v2.x, y: v2.y, z: v2.z, a: v2.a };
 
-                offsetAddLine(v1, v2);
+                if(!isFirstMove){
+                    offsetAddLine(v1, v2);
+                }
+                isFirstMove = false;
 
                 // Update position
                 _this.setPosition(targetPosition.x, targetPosition.y, targetPosition.z, targetPosition.a);
@@ -178,7 +184,10 @@ var Toolpath = function () {
                 };
                 var targetPosition = { x: v2.x, y: v2.y, z: v2.z, a: v2.a };
 
-                offsetAddLine(v1, v2);
+                if(!isFirstMove){
+                    offsetAddLine(v1, v2);
+                }
+                isFirstMove = false;
 
                 // Update position
                 _this.setPosition(targetPosition.x, targetPosition.y, targetPosition.z, targetPosition.a);
@@ -515,6 +524,8 @@ var Toolpath = function () {
         // Position
 
 
+        var isFirstMove = true;
+
         if (position) {
             var _position = _extends({}, position),
                 x = _position.x,
@@ -660,6 +671,17 @@ var Toolpath = function () {
                 relative = this.isRelativeDistance();
             }
             return translatePosition(this.position.z, z, !!relative);
+        }
+    },{
+        key: 'translateA',
+        value: function translateA(a, relative) {
+            if (a !== undefined) {
+                a = this.isImperialUnits() ? in2mm(a) : a;
+            }
+            if (relative === undefined) {
+                relative = this.isRelativeDistance();
+            }
+            return translatePosition(this.position.a, a, !!relative);
         }
     }, {
         key: 'translateI',

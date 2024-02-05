@@ -9,7 +9,9 @@ $(function() {
     var tp = canvas.getContext("2d");
     var rect;
 
-    tp.lineWidth = 0.1;
+    var upscaler = 4;
+
+    tp.lineWidth = 0.5;
     tp.lineCap = 'round';
     tp.strokeStyle = 'blue';
 
@@ -49,6 +51,7 @@ $(function() {
     var drawTool = function(pos) {
         toolX = xToPixel(pos.z)-toolRadius-2;
         toolY = yToPixel(pos.a)-toolRadius-2;
+        
         toolSave = tp.getImageData(toolX, toolY, toolRectWH, toolRectWH);
 
         tp.beginPath();
@@ -59,12 +62,30 @@ $(function() {
         tp.stroke();
     }
 
-    var drawOrigin = function(radius) {
+    var drawOrigin = function() {
+        var grid_size = 25;
+        var x_axis_distance_grid_lines = 5;
+        var y_axis_distance_grid_lines = 5;
+        var x_axis_starting_point = { number: 1, suffix: '\u03a0' };
+        var y_axis_starting_point = { number: 1, suffix: '' };
+        // canvas width
+        var canvas_width = canvas.width;
+        
+        // canvas height
+        var canvas_height = canvas.height;
+        // no of vertical grid lines
+        var num_lines_x = Math.floor(canvas_height/grid_size);
+
+        // no of horizontal grid lines
+        var num_lines_y = Math.floor(canvas_width/grid_size);
+
+
+        var radius = 20 * 0.04;
         tp.beginPath();
         tp.strokeStyle = 'red';
         tp.arc(0, 0, radius, 0, Math.PI*2, false);
-        tp.moveTo(-radius*1.5, 0);
-        tp.lineTo(radius*1.5, 0);
+        tp.moveTo(0, 0);
+        tp.lineTo(canvas.height, 0);
         tp.moveTo(0,-radius*1.5);
         tp.lineTo(0, radius*1.5);
         tp.stroke();
@@ -80,8 +101,11 @@ $(function() {
         toolSave = null;
         if (rect == undefined) {
             rect = canvas.parentNode.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
+            canvas.width = rect.width * upscaler;
+            canvas.height = rect.height * upscaler;
+            //var devicePixelRatio = window.devicePixelRatio || 1;
+            //canvas.width = Math.round (devicePixelRatio * rect.right) - Math.round (devicePixelRatio * rect.left);
+            //canvas.height = Math.round (devicePixelRatio * rect.bottom) - Math.round (devicePixelRatio * rect.top);
         }
 
         // Reset the transform and clear the canvas
@@ -120,6 +144,7 @@ $(function() {
         if (scaler < 0) {
             scaler = -scaler;
         }
+        
         xOffset = inset - bbox.min.x * scaler;
         yOffset = (canvas.height-inset) - bbox.min.y * (-scaler);
 
@@ -155,24 +180,24 @@ $(function() {
 
         tp.setTransform(scaler, 0, 0, -scaler, xOffset, yOffset);
 
-        tp.lineWidth = 0.5 / scaler;
+        tp.lineWidth = 5.5 / 4 / scaler * upscaler;
 
-        drawOrigin(imageWidth * 0.04);
+        drawOrigin();
     }
     var wrappedDegrees = function(radians) {
         var degrees = radians * 180 / Math.PI;
         return degrees >= 0 ? degrees : degrees + 360;
     }
 
-    var bboxHandlers = {
+    var bboxHandlersL = {
         addLine: function(modal, start, end) {
 	    // Update units in case it changed in a previous line
             units = modal.units;
 
-            bbox.min.x = Math.min(bbox.min.x, start.x, end.x);
-            bbox.min.y = Math.min(bbox.min.y, start.y, end.y);
-            bbox.max.x = Math.max(bbox.max.x, start.x, end.x);
-            bbox.max.y = Math.max(bbox.max.y, start.y, end.y);
+            bbox.min.x = Math.min(bbox.min.x, start.z, end.z, start.x, end.x);
+            bbox.min.y = Math.min(bbox.min.y, start.a, end.a, start.y, end.y);
+            bbox.max.x = Math.max(bbox.max.x, start.z, end.z, start.x, end.x);
+            bbox.max.y = Math.max(bbox.max.y, start.a, end.a, start.y, end.y);
             bboxIsSet = true;
         },
         addArcCurve: function(modal, start, end, center) {
@@ -291,18 +316,18 @@ $(function() {
 	}
     };
 
-    var initialMoves = true;
-    var displayHandlers = {
+    var initialMovesL = true;
+    var displayHandlersL = {
         addLine: function(modal, start, end) {
             var motion = modal.motion;
             if (motion == 'G0') {
-                tp.strokeStyle = initialMoves ? 'red' : 'green';
+                tp.strokeStyle = initialMovesL ? 'red' : 'green';
             } else {
                 tp.strokeStyle = 'blue';
                 // Don't cancel initialMoves on no-motion G1 (e.g. G1 F30)
                 // or on Z-only moves
                 if (start.z != end.z || start.a != end.a) {
-                    initialMoves = false;
+                    initialMovesL = false;
                 }
             }
 
@@ -325,7 +350,7 @@ $(function() {
 		theta2 += Math.PI * ((modal.motion == "G2") ? -2 : 2);
 	    }
 
-            initialMoves = false;
+            initialMovesL = false;
 
             tp.beginPath();
             tp.strokeStyle = 'blue';
@@ -334,15 +359,15 @@ $(function() {
         },
     };
 
-    var ToolpathDisplayer = function() {
+    var ToolpathDisplayerL = function() {
     };
 
     var offset;
 
-    ToolpathDisplayer.prototype.showToolpathL = function(gcode, wpos, mpos) {
+    ToolpathDisplayerL.prototype.showToolpathL = function(gcode, wpos, mpos) {
         inInches = $('[data-route="workspace"] [id="units"]').text() != 'mm';
 
-        var factor = inInches ? 25.4 : 1.0;
+        var factor = 1.0;
 
         var initialPosition = {
             x: wpos.x * factor,
@@ -359,43 +384,43 @@ $(function() {
         };
 
         offset = {
-            x: initialPosition.x - mposmm.x,
-            y: initialPosition.y - mposmm.y,
-            z: initialPosition.z - mposmm.z,
-            a: initialPosition.a - mposmm.a
+            x: 0,
+            y: 0,
+            z: 0,
+            a: 0
         };
 
         resetBbox();
-        bboxHandlers.position = initialPosition;
+        bboxHandlersL.position = initialPosition;
 
         var gcodeLines = gcode.split('\n');
-        new Toolpath(bboxHandlers).loadFromLinesSync(gcodeLines);
+        new Toolpath(bboxHandlersL).loadFromLinesSync(gcodeLines);
         transformCanvas();
         if (!bboxIsSet) {
             return;
         }
-        initialMoves = true;
-        displayHandlers.position = initialPosition;
-        new Toolpath(displayHandlers).loadFromLinesSync(gcodeLines);
+        initialMovesL = true;
+        displayHandlersL.position = initialPosition;
+        new Toolpath(displayHandlersL).loadFromLinesSync(gcodeLines);
 
         drawTool(initialPosition);
     };
 
-    ToolpathDisplayer.prototype.reDrawToolL = function(modal, mpos) {
+    ToolpathDisplayerL.prototype.reDrawToolL = function(modal, wpos) {
         if (toolSave != null) {
             tp.putImageData(toolSave, toolX, toolY);
-            var factor = modal.units === 'G20' ? 25.4 : 1.0;
+            var factor = 1.0;
 
             var dpos = {
-                x: mpos.x * factor + offset.x,
-                y: mpos.y * factor + offset.y,
-                z: mpos.z * factor + offset.z,
-                a: mpos.a * factor + offset.a
+                x: wpos.x * factor + offset.x,
+                y: wpos.y * factor + offset.y,
+                z: wpos.z * factor + offset.z,
+                a: wpos.a * factor + offset.a
             };
             drawTool(dpos);
         }
     }
 
 
-    root.displayerL = new ToolpathDisplayer();
+    root.displayerL = new ToolpathDisplayerL();
 });

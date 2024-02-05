@@ -347,6 +347,30 @@ cnc.sendMove = function(cmd) {
         },
         'A+': function() {
             jog({ A: distance });
+        },
+        'X+Z+': function() {
+            jog({ Z: distance, X: distance });
+        },
+        'X-Z-': function() {
+            jog({ Z: -distance, X: -distance });
+        },
+        'Y+A+': function() {
+            jog({ Y: distance, A: distance });
+        },
+        'Y-A-': function() {
+            jog({ Y: -distance, A: -distance });
+        },
+        'X-Y+Z-A+': function() {
+            jog({ X: -distance, Y: distance, Z: -distance, A: distance });
+        },
+        'X+Y+Z+A+': function() {
+            jog({ X: distance, Y: distance, Z: distance, A: distance });
+        },
+        'X+Y-Z+A-': function() {
+            jog({ X: distance, Y: -distance, Z: distance, A: -distance });
+        },
+        'X-Y-Z-A-': function() {
+            jog({ X: -distance, Y: -distance, Z: -distance, A: -distance });
         }
     }[cmd];
 
@@ -488,6 +512,8 @@ function renderGrblState(data) {
     stateName = status.activeState;
     mpos = status.mpos;
     wpos = status.wpos;
+
+    console.log(wpos, "wpos");
 
     // Grbl states are Idle, Run, Jog, Hold
     // The code used to allow click in Run state but that seems wrong
@@ -825,24 +851,24 @@ cnc.doResetButton = function() {
             selector.append($("<option/>").text('30'));
             selector.val('10');
         } else  {
-            $('[data-route="workspace"] [id="jog00"]').text('0.01');
-            $('[data-route="workspace"] [id="jog01"]').text('0.1');
-            $('[data-route="workspace"] [id="jog02"]').text('1');
-            $('[data-route="workspace"] [id="jog03"]').text('10');
-            $('[data-route="workspace"] [id="jog10"]').text('0.03');
-            $('[data-route="workspace"] [id="jog11"]').text('0.3');
-            $('[data-route="workspace"] [id="jog12"]').text('3');
-            $('[data-route="workspace"] [id="jog13"]').text('30');
-            $('[data-route="workspace"] [id="jog20"]').text('0.05');
-            $('[data-route="workspace"] [id="jog21"]').text('0.5');
-            $('[data-route="workspace"] [id="jog22"]').text('5');
-            $('[data-route="workspace"] [id="jog23"]').text('50');
-            selector.append($("<option/>").text('0.005'));
-            selector.append($("<option/>").text('0.01'));
-            selector.append($("<option/>").text('0.03'));
+            //$('[data-route="workspace"] [id="jog00"]').text('0.01');
+            //$('[data-route="workspace"] [id="jog01"]').text('0.1');
+            //$('[data-route="workspace"] [id="jog02"]').text('1');
+            //$('[data-route="workspace"] [id="jog03"]').text('10');
+            //$('[data-route="workspace"] [id="jog10"]').text('0.03');
+            //$('[data-route="workspace"] [id="jog11"]').text('0.3');
+            //$('[data-route="workspace"] [id="jog12"]').text('3');
+            //$('[data-route="workspace"] [id="jog13"]').text('30');
+            //$('[data-route="workspace"] [id="jog20"]').text('0.05');
+            //$('[data-route="workspace"] [id="jog21"]').text('0.5');
+            //$('[data-route="workspace"] [id="jog22"]').text('5');
+            //$('[data-route="workspace"] [id="jog23"]').text('50');
+            //selector.append($("<option/>").text('0.005'));
+            //selector.append($("<option/>").text('0.01'));
+            //selector.append($("<option/>").text('0.03'));
             selector.append($("<option/>").text('0.05'));
             selector.append($("<option/>").text('0.1'));
-            selector.append($("<option/>").text('0.3'));
+            selector.append($("<option/>").text('0.2'));
             selector.append($("<option/>").text('0.5'));
             selector.append($("<option/>").text('1'));
             selector.append($("<option/>").text('3'));
@@ -852,7 +878,7 @@ cnc.doResetButton = function() {
             selector.append($("<option/>").text('50'));
             selector.append($("<option/>").text('100'));
             selector.append($("<option/>").text('300'));
-            selector.append($("<option/>").text('1000'));
+            selector.append($("<option/>").text('600'));
             selector.val(distance);
         }
     }
@@ -953,8 +979,8 @@ cnc.updateView = function() {
         $('[data-route="workspace"] [id="line"]').text(receivedLines);
         scrollToLine(receivedLines);
     }
-    root.displayerL.reDrawToolL(modal, mpos);
-    root.displayerR.reDrawToolR(modal, mpos);
+    root.displayerL.reDrawToolL(modal, wpos);
+    root.displayerR.reDrawToolR(modal, wpos);
 
     var digits = modal.units == 'G20' ? 2 : 2;
     var dmpos = {
@@ -1107,6 +1133,8 @@ cnc.showGCode = function(name, gcode) {
     }
     $('[data-route="workspace"] [id="gcode"]').text(gcode);
     if (gCodeLoaded) {
+        
+        console.log(wpos, "wpos2");
         root.displayerL.showToolpathL(gcode, wpos, mpos);
         root.displayerR.showToolpathR(gcode, wpos, mpos);
     }
