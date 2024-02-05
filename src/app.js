@@ -149,6 +149,29 @@ cnc.goAxis = function(axis, coordinate) {
     }
 }
 
+cnc.goTwoAxes = function(axis1, axis2, coordinate) {
+    cnc.click();
+    if (modal.distance == 'G90') {
+	controller.command('gcode', 'G0 ' + axis1 + coordinate + ' ' + axis2 + coordinate);
+    } else {
+	controller.command('gcode', 'G90');
+	controller.command('gcode', 'G0 ' + axis1 + coordinate + ' ' + axis2 + coordinate);
+	controller.command('gcode', 'G91');
+    }
+}
+
+cnc.goAllAxes = function(coordinate) {
+    cnc.click();
+    if (modal.distance == 'G90') {
+    controller.command('gcode', 'G0 X' + coordinate + ' Y' + coordinate + ' Z' + coordinate + ' A' + coordinate);
+    } else {
+	controller.command('gcode', 'G90');
+    controller.command('gcode', 'G0 X' + coordinate + ' Y' + coordinate + ' Z' + coordinate + ' A' + coordinate);
+	controller.command('gcode', 'G91');
+    }
+}
+
+
 cnc.moveAxis = function(axis, field) {
     cnc.goAxis(axis, document.getElementById(field).value)
 }
@@ -175,6 +198,18 @@ cnc.MDI = function(field) {
 
 cnc.zeroAxis = function(axis) {
     cnc.setAxisByValue(axis, 0);
+}
+
+cnc.zeroTwoAxes = function(axis1, axis2) {
+    cnc.setAxisByValue(axis1, 0);
+    cnc.setAxisByValue(axis2, 0);
+}
+
+cnc.zeroAllAxes = function() {
+    cnc.setAxisByValue('X', 0);
+    cnc.setAxisByValue('Y', 0);
+    cnc.setAxisByValue('Z', 0);
+    cnc.setAxisByValue('A', 0);
 }
 
 cnc.toggleFullscreen = function() {
@@ -253,6 +288,9 @@ cnc.sendMove = function(cmd) {
         'X0Y0Z0': function() {
             move({ X: 0, Y: 0, Z: 0 })
         },
+        'X0Y0Z0A0': function() {
+            move({ X: 0, Y: 0, Z: 0, A: 0 })
+        },
         'X0': function() {
             move({ X: 0 });
         },
@@ -274,6 +312,18 @@ cnc.sendMove = function(cmd) {
         'X+Y-': function() {
             jog({ X: distance, Y: -distance });
         },
+        'Z-A+': function() {
+            jog({ Z: -distance, A: distance });
+        },
+        'Z+A+': function() {
+            jog({ Z: distance, A: distance });
+        },
+        'Z-A-': function() {
+            jog({ Z: -distance, A: -distance });
+        },
+        'Z+A-': function() {
+            jog({ Z: distance, A: -distance });
+        },
         'X-': function() {
             jog({ X: -distance });
         },
@@ -291,6 +341,12 @@ cnc.sendMove = function(cmd) {
         },
         'Z+': function() {
             jog({ Z: distance });
+        },
+        'A-': function() {
+            jog({ A: -distance });
+        },
+        'A+': function() {
+            jog({ A: distance });
         }
     }[cmd];
 
@@ -459,10 +515,12 @@ function renderGrblState(data) {
     mpos.x *= factor;
     mpos.y *= factor;
     mpos.z *= factor;
+    mpos.a *= factor;
 
     wpos.x *= factor;
     wpos.y *= factor;
     wpos.z *= factor;
+    wpos.a *= factor;
 
     if (status.feedrate) {
 	velocity = status.feedrate * factor;
@@ -697,7 +755,7 @@ setButton = function(name, isEnabled, color, text) {
     var button = $('[data-route="workspace"] .nav-panel ' + name);
     button.prop('disabled', !isEnabled);
     button.prop('style').backgroundColor = color;
-    button.prop('innerText', text);
+    //button.prop('innerText', text);
 }
 
 var leftButtonHandler;
@@ -723,7 +781,17 @@ cnc.doRightButton = function() {
 }
 
 
+cnc.doResetButton = function() {
+    if (rightButtonHandler) {
+        rightButtonHandler();
+    }
+}
+
+
+
     cnc.setJogSelector = function(units) {
+        var distance = $('[data-route="workspace"] select[data-name="select-distance"]').val() || '10';
+
         var selector = $('[data-route="workspace"] select[data-name="select-distance"]');
         selector.empty();
         if (units == "Inch") {
@@ -755,7 +823,7 @@ cnc.doRightButton = function() {
             selector.append($("<option/>").text('5'));
             selector.append($("<option/>").text('10'));
             selector.append($("<option/>").text('30'));
-            selector.val('1');
+            selector.val('10');
         } else  {
             $('[data-route="workspace"] [id="jog00"]').text('0.01');
             $('[data-route="workspace"] [id="jog01"]').text('0.1');
@@ -785,7 +853,7 @@ cnc.doRightButton = function() {
             selector.append($("<option/>").text('100'));
             selector.append($("<option/>").text('300'));
             selector.append($("<option/>").text('1000'));
-            selector.val('10');
+            selector.val(distance);
         }
     }
 
@@ -873,15 +941,13 @@ cnc.updateView = function() {
 	: "<div style='color:red'>" + modal.distance + "</div>";
     $('[data-route="workspace"] [id="distance"]').html(distanceText);
 
-    if (machineWorkflow == MACHINE_RUN) {
-	var rateText = modal.units == 'G21'
-	    ? Number(velocity).toFixed(0) + ' mm/min'
-	    : Number(velocity).toFixed(2) + ' in/min';
-        $('[data-route="workspace"] [data-name="active-state"]').text(rateText);
-    } else {
-        var stateText = stateName == 'Error' ? "Error: " + errorMessage : stateName;
-        $('[data-route="workspace"] [data-name="active-state"]').text(stateText);
-    }
+	//var rateText = modal.units == 'G21' ? Number(velocity).toFixed(0) + ' mm/min' : Number(velocity).toFixed(2) + ' in/min';
+
+    //document.getElementById('active-state').innerHTML = rateText;
+    var stateText = stateName == 'Error' ? "Error: " + errorMessage : stateName;
+
+    document.getElementById('current-state').innerHTML = stateText;
+    //document.getElementById('current-error').innerHTML = errorMessage;
 
     if (machineWorkflow == MACHINE_RUN || machineWorkflow == MACHINE_HOLD || machineWorkflow == MACHINE_STOP) {
         $('[data-route="workspace"] [id="line"]').text(receivedLines);
@@ -890,18 +956,18 @@ cnc.updateView = function() {
     root.displayerL.reDrawToolL(modal, mpos);
     root.displayerR.reDrawToolR(modal, mpos);
 
-    var digits = modal.units == 'G20' ? 4 : 3;
+    var digits = modal.units == 'G20' ? 2 : 2;
     var dmpos = {
         x: Number(mpos.x).toFixed(digits),
         y: Number(mpos.y).toFixed(digits),
         z: Number(mpos.z).toFixed(digits),
-        a: Number(mpos.a).toFixed(2)
+        a: Number(mpos.a).toFixed(digits)
     };
     var dwpos = {
         x: Number(wpos.x).toFixed(digits),
         y: Number(wpos.y).toFixed(digits),
         z: Number(wpos.z).toFixed(digits),
-        a: Number(wpos.a).toFixed(2)
+        a: Number(wpos.a).toFixed(digits)
     };
 
     $('[data-route="workspace"] [id="wpos-x"]').prop('value', dwpos.x);
@@ -1159,7 +1225,7 @@ $('[data-route="connection"] [data-name="btn-open"]').on('click', function() {
 //
 $('[data-route="workspace"] [data-name="btn-dropdown"]').dropdown();
 $('[data-route="workspace"] [data-name="active-state"]').text('NoConnect');
-$('[data-route="workspace"] select[data-name="select-distance"]').val('1');
+$('[data-route="workspace"] select[data-name="select-distance"]').val('10');
 
 cycleDistance = function(up) {
     var selector = $('[data-route="workspace"] select[data-name="select-distance"]');
