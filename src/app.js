@@ -209,6 +209,28 @@ $(function () {
         cnc.MDIcmd(document.getElementById(field).value);
     }
 
+    cnc.adjustTemperature = function (increment) {
+        switch (increment) {
+            case -10:
+                controller.command('spindleOverride', -10);
+                break;
+            case -1:
+                controller.command('spindleOverride', -1);
+                break;
+            case 1:
+                controller.command('spindleOverride', 1);
+                break;
+            case 10:
+                controller.command('spindleOverride', 10);
+                break;
+            case 0:
+                controller.command('spindleOverride', 0);
+                break;
+            default:
+                break;
+        }
+    }
+
     cnc.zeroAxis = function (axis) {
         cnc.setAxisByValue(axis, 0);
     }
