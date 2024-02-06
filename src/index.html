@@ -892,7 +892,7 @@
                         </div>
                         <div class="col-xs-1 active-state"
                             style="border: 1px; border-color: #ccc; border-style: solid; background-color: #eee; border-radius: 1mm; text-align: center;"
-                        id="spindle-state">-</div>
+                        id="demo">-</div>
 
                     </div>
 
@@ -912,6 +912,13 @@
     <script src="jquery.numpad.js"></script>
     <link rel="stylesheet" href="jquery.numpad.css">
     <script>
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value;
+
+        slider.oninput = function() {
+        output.innerHTML = this.value;
+        }
 
         // Set NumPad defaults for jQuery mobile.
         // These defaults will be applied to all NumPads within this document!
