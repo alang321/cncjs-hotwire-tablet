@@ -939,7 +939,7 @@ $(function () {
         //	canStart = false;
         //}
         
-        updateSpindleFeedrate();
+        cnc.updateSpindleFeedrate();
 
         grblReportingUnits = 0;
 
@@ -1035,7 +1035,7 @@ $(function () {
                 enableButtom('unlock-btn', 'white', 'Unlock');
                 break;
         }
-        
+
         // Nonzero receivedLines is a good indicator of GCode execution
         // as opposed to jogging, etc.
         if (receivedLines && startTime) {
