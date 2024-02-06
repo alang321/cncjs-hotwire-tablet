@@ -1032,7 +1032,7 @@ $(function () {
             : "<div style='color:red'>" + modal.distance + "</div>";
         $('[data-route="workspace"] [id="distance"]').html(distanceText);
 
-        var rateText = Number(velocity).toFixed(0) + ' [mm/min]';
+        var rateText = Number(velocity).toFixed(0);
 
         document.getElementById('active-state').innerHTML = rateText;
         var stateText = stateName == 'Error' ? "Error: " + errorMessage : stateName;
