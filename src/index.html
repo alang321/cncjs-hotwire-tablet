@@ -741,7 +741,7 @@
             </div>
         </div>
 
-        <div class="axis-position">
+        <div class="axis-position" style="background-color: #f0fff0;">
             <div class="container-fluid">
 
                 <div class="row no-gutter">
@@ -794,7 +794,71 @@
                         <div class="col-xs-2">
                             
                             <button type="button" class="btn btn-default" style="border-top-left-radius: 0%; border-bottom-left-radius: 0%;  width: 100%; margin-right: 0; margin-left: 0;"
-                            onclick="cnc.sendMove('X-Y+Z-A+')">
+                            onclick="cnc.adjustTemperature(10)">
+                            <img style="border-top-left-radius: 0%; border-bottom-left-radius: 0%; margin: 0 auto; display: block;" width="100%" height="100%"
+                                src="icons/reset.svg" />
+                            </button>
+                        </div>
+                        <div class="col-xs-1"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="axis-position" style="background-color: #f3f0ff;">
+            <div class="container-fluid">
+
+                <div class="row no-gutter">
+                    <div class="col-xs-2">
+                        <div class="col-xs-6 active-state"
+                            style="border: 1px; border-color: #ccc; border-style: solid; background-color: #eee; border-radius: 1mm; text-align: center;"
+                            id="active-state" data-name="active-state">-</div>
+                        <div class="col-xs-5 info-button" style="text-align: center; font-size: 18px;">mm/min</div>
+                    </div>
+
+                    <div class="col-xs-1">
+                    </div>
+
+                    <div class="col-xs-1">
+                        <div class="info-button"
+                            style="border: 1px; border-color: #ccc; border-style: solid; background-color: #eee; border-radius: 1mm; text-align: right;"
+                            id="test" data-name="active-state">-</div>
+                    </div>
+
+                    <div class="col-xs-5">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-2">
+                            <button type="button"
+                                style="border-top-right-radius: 0%; border-bottom-right-radius: 0%; width: 100%; margin-right: 0; margin-left: 0;"
+                                class="btn btn-default" onclick="cnc.adjustTemperature(-10)">
+                                -10%
+                            </button>
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button"
+                                style="border-radius: 0%; width: 100%; margin-right: 0; margin-left: 0;"
+                                class="btn btn-default" onclick="cnc.adjustTemperature(-1)">
+                                -1%
+                            </button>
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button"
+                                style="border-radius: 0%; width: 100%; margin-right: 0; margin-left: 0;"
+                                class="btn btn-default" onclick="cnc.adjustTemperature(1)">
+                                +1%
+                            </button>
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button"
+                                style="border-radius: 0%;  width: 100%; margin-right: 0; margin-left: 0;"
+                                class="btn btn-default" onclick="cnc.adjustTemperature(10)">
+                                +10%
+                            </button>
+                        </div>
+                        <div class="col-xs-2">
+                            
+                            <button type="button" class="btn btn-default" style="border-top-left-radius: 0%; border-bottom-left-radius: 0%;  width: 100%; margin-right: 0; margin-left: 0;"
+                            onclick="cnc.adjustTemperature(10)">
                             <img style="border-top-left-radius: 0%; border-bottom-left-radius: 0%; margin: 0 auto; display: block;" width="100%" height="100%"
                                 src="icons/reset.svg" />
                             </button>
