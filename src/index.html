@@ -919,7 +919,7 @@
         output.innerHTML = slider.value;
 
         slider.oninput = function () {
-            output.innerHTML = this.value;
+            output.innerHTML = Number(this.value).toFixed(1);
         }
 
         // Set NumPad defaults for jQuery mobile.
