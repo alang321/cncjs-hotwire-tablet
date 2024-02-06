@@ -208,9 +208,20 @@ $(function () {
         cnc.click();
         controller.command('gcode', 'G10 L20 ' + cnc.currentAxisPNum() + ' ' + axis + coordinate);
     }
+
     cnc.setAxis = function (axis, field) {
         cnc.setAxisByValue(axis, document.getElementById(field).value);
     }
+    
+    cnc.hotwireOn = function () {
+        controller.command('lasertest:on', Math.round(power * (1000 / 24)) / 10, 0, 1000);
+    }
+    
+    cnc.hotwireOff = function () {
+        controller.command('lasertest:off');
+    }
+
+
     cnc.MDIcmd = function (value) {
         cnc.click();
         controller.command('gcode', value);
@@ -236,6 +247,28 @@ $(function () {
                 break;
             case 0:
                 controller.command('spindleOverride', 0);
+                break;
+            default:
+                break;
+        }
+    }
+
+    cnc.adjustFeedrate = function (increment) {
+        switch (increment) {
+            case -10:
+                controller.command('feedOverride', -10);
+                break;
+            case -1:
+                controller.command('feedOverride', -1);
+                break;
+            case 1:
+                controller.command('feedOverride', 1);
+                break;
+            case 10:
+                controller.command('feedOverride', 10);
+                break;
+            case 0:
+                controller.command('feedOverride', 0);
                 break;
             default:
                 break;
