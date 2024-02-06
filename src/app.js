@@ -199,6 +199,9 @@ $(function () {
         var volt = Number(spindleSpeed/1000*24).toFixed(2);
         document.getElementById('active-state').innerHTML = rateText;
         document.getElementById('spindle-state').innerHTML = volt;
+
+        document.getElementById('feed-override').innerHTML = Number(feedOverride).toFixed(0);
+        document.getElementById('hotwire-override').innerHTML = Number(spindleOverride).toFixed(0);
     }
 
     cnc.setAxisByValue = function (axis, coordinate) {
@@ -593,9 +596,9 @@ $(function () {
         //}
         spindleDirection = modal.spindle;
 
-        feedOverride = status.ov[0] / 100.0;
+        feedOverride = status.ov[0];
         rapidOverride = status.ov[1] / 100.0;
-        spindleOverride = status.ov[2] / 100.0;
+        spindleOverride = status.ov[2];
 
         console.log(feedOverride, rapidOverride, spindleOverride);
 
