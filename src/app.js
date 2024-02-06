@@ -1,3 +1,5 @@
+
+
 // Mofified
 $(function () {
 
@@ -145,6 +147,7 @@ $(function () {
 
     cnc.loadFile = function () {
         filename = document.getElementById('filename').value;
+
         controller.command('watchdir:load', filename);
     }
 
@@ -1235,7 +1238,9 @@ $(function () {
             cnc.filename = '';
             cnc.getFileList();
         } else {
-            controller.command('watchdir:load', watchPath + filename);
+            var path = watchPath + filename;
+
+            controller.command('watchdir:load', path);
         }
     }
 
