@@ -1033,8 +1033,10 @@ $(function () {
         $('[data-route="workspace"] [id="distance"]').html(distanceText);
 
         var rateText = Number(velocity).toFixed(0) + ' mm/min';
+        console.log(velocity, "velocity");
+        console.log(rateText);
 
-        document.getElementById('active-state').innerHTML = rateText;
+        //document.getElementById('active-state').innerHTML = rateText;
         var stateText = stateName == 'Error' ? "Error: " + errorMessage : stateName;
 
         if (stateName.includes('error')) {
