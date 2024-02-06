@@ -833,67 +833,20 @@ $(function () {
 
         var selector = $('[data-route="workspace"] select[data-name="select-distance"]');
         selector.empty();
-        if (units == "Inch") {
-            $('[data-route="workspace"] [id="jog00"]').text('0.001');
-            $('[data-route="workspace"] [id="jog01"]').text('0.01');
-            $('[data-route="workspace"] [id="jog02"]').text('0.1');
-            $('[data-route="workspace"] [id="jog03"]').text('1');
-            $('[data-route="workspace"] [id="jog10"]').text('0.003');
-            $('[data-route="workspace"] [id="jog11"]').text('0.03');
-            $('[data-route="workspace"] [id="jog12"]').text('0.3');
-            $('[data-route="workspace"] [id="jog13"]').text('3');
-            $('[data-route="workspace"] [id="jog20"]').text('0.005');
-            $('[data-route="workspace"] [id="jog21"]').text('0.05');
-            $('[data-route="workspace"] [id="jog22"]').text('0.5');
-            $('[data-route="workspace"] [id="jog23"]').text('5');
-            selector.append($("<option/>").text('0.00025'));
-            selector.append($("<option/>").text('0.0005'));
-            selector.append($("<option/>").text('0.001'));
-            selector.append($("<option/>").text('0.003'));
-            selector.append($("<option/>").text('0.005'));
-            selector.append($("<option/>").text('0.01'));
-            selector.append($("<option/>").text('0.03'));
-            selector.append($("<option/>").text('0.05'));
-            selector.append($("<option/>").text('0.1'));
-            selector.append($("<option/>").text('0.3'));
-            selector.append($("<option/>").text('0.5'));
-            selector.append($("<option/>").text('1'));
-            selector.append($("<option/>").text('3'));
-            selector.append($("<option/>").text('5'));
-            selector.append($("<option/>").text('10'));
-            selector.append($("<option/>").text('30'));
-            selector.val('10');
-        } else {
-            //$('[data-route="workspace"] [id="jog00"]').text('0.01');
-            //$('[data-route="workspace"] [id="jog01"]').text('0.1');
-            //$('[data-route="workspace"] [id="jog02"]').text('1');
-            //$('[data-route="workspace"] [id="jog03"]').text('10');
-            //$('[data-route="workspace"] [id="jog10"]').text('0.03');
-            //$('[data-route="workspace"] [id="jog11"]').text('0.3');
-            //$('[data-route="workspace"] [id="jog12"]').text('3');
-            //$('[data-route="workspace"] [id="jog13"]').text('30');
-            //$('[data-route="workspace"] [id="jog20"]').text('0.05');
-            //$('[data-route="workspace"] [id="jog21"]').text('0.5');
-            //$('[data-route="workspace"] [id="jog22"]').text('5');
-            //$('[data-route="workspace"] [id="jog23"]').text('50');
-            //selector.append($("<option/>").text('0.005'));
-            //selector.append($("<option/>").text('0.01'));
-            //selector.append($("<option/>").text('0.03'));
-            selector.append($("<option/>").text('0.05'));
-            selector.append($("<option/>").text('0.1'));
-            selector.append($("<option/>").text('0.2'));
-            selector.append($("<option/>").text('0.5'));
-            selector.append($("<option/>").text('1'));
-            selector.append($("<option/>").text('3'));
-            selector.append($("<option/>").text('5'));
-            selector.append($("<option/>").text('10'));
-            selector.append($("<option/>").text('30'));
-            selector.append($("<option/>").text('50'));
-            selector.append($("<option/>").text('100'));
-            selector.append($("<option/>").text('300'));
-            selector.append($("<option/>").text('600'));
-            selector.val(distance);
-        }
+        selector.append($("<option/>").text('0.05'));
+        selector.append($("<option/>").text('0.1'));
+        selector.append($("<option/>").text('0.2'));
+        selector.append($("<option/>").text('0.5'));
+        selector.append($("<option/>").text('1'));
+        selector.append($("<option/>").text('3'));
+        selector.append($("<option/>").text('5'));
+        selector.append($("<option/>").text('10'));
+        selector.append($("<option/>").text('30'));
+        selector.append($("<option/>").text('50'));
+        selector.append($("<option/>").text('100'));
+        selector.append($("<option/>").text('300'));
+        selector.append($("<option/>").text('600'));
+        selector.val(distance);
     }
 
     cnc.updateView = function () {
@@ -1352,99 +1305,4 @@ $(function () {
     var shiftDown = false;
     var ctrlDown = false;
     var altDown = false;
-    jogClick = function (name) {
-        if (shiftDown || altDown) {
-            var distanceElement = $('[data-route="workspace"] select[data-name="select-distance"]');
-            var distance = distanceElement.val();
-            var factor = shiftDown ? 10 : 0.1;
-            distanceElement.val(distance * factor);
-            clickon(name);
-            distanceElement.val(distance);
-        } else {
-            clickon(name);
-        }
-    }
-
-    // Reports whether a text input box has focus - see the next comment
-    cnc.inputFocused = false;
-
-    $('.mdifield').on('keyup', function (event) {
-        if (event.key === 'Enter') {
-            cnc.MDIcmd(event.target.value);
-            event.target.blur();
-        }
-    });
-
-    $(document).on('keydown keyup', function (event) {
-        // When we are in a modal input field like the MDI text boxes
-        // or the numeric entry boxes, disable keyboard jogging so those
-        // keys can be used for text editing.
-        if (cnc.inputFocused) {
-            return;
-        }
-        if (event.type === 'keydown') {
-            switch (event.key) {
-                case "ArrowRight":
-                    jogClick('.jog-x-plus');
-                    event.preventDefault();
-                    break;
-                case "ArrowLeft":
-                    jogClick('.jog-x-minus');
-                    event.preventDefault();
-                    break;
-                case "ArrowUp":
-                    jogClick('.jog-y-plus');
-                    event.preventDefault();
-                    break;
-                case "ArrowDown":
-                    jogClick('.jog-y-minus');
-                    event.preventDefault();
-                    break;
-                case "PageUp":
-                    jogClick('.jog-z-plus');
-                    event.preventDefault();
-                    break;
-                case "PageDown":
-                    jogClick('.jog-z-minus');
-                    event.preventDefault();
-                    break;
-                case "Escape":
-                case "Pause":
-                    clickon('.btn-pause');
-                    break;
-                case "Shift":
-                    shiftDown = true;
-                    break;
-                case "Control":
-                    ctrlDown = true;
-                    break;
-                case "Alt":
-                    altDown = true;
-                    break;
-                case "=": // = is unshifted + on US keyboards
-                case "+":
-                    cycleDistance(true);
-                    event.preventDefault();
-                    break;
-                case '-':
-                    cycleDistance(false);
-                    event.preventDefault();
-                    break;
-                default:
-                    console.log(event);
-            }
-        } else if (event.type === 'keyup') {
-            switch (event.key) {
-                case "Shift":
-                    shiftDown = false;
-                    break;
-                case "Control":
-                    ctrlDown = false;
-                    break;
-                case "Alt":
-                    altDown = false;
-                    break;
-            }
-        }
-    });
 });
