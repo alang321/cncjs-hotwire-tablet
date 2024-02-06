@@ -214,6 +214,7 @@ $(function () {
     }
     
     cnc.hotwireOn = function () {
+        var power = slider.value;
         controller.command('lasertest:on', Math.round(power * (1000 / 24)) / 10, 0, 1000);
     }
     
