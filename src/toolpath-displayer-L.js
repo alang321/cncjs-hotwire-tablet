@@ -45,7 +45,7 @@ $(function () {
     var toolX = null;
     var toolY = null;
     var toolSave = null;
-    var toolRadius = 4;
+    var toolRadius = 10;
     var toolRectWH = toolRadius * 2 + 20;  // Slop to encompass the entire image area
 
     var drawTool = function (pos) {
@@ -204,7 +204,7 @@ $(function () {
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'start';
-            tp.fillText(-grid_size * i / 10, xToPixel(0) - 25 * scaler, yToPixel(-grid_size * i) + 6 * scaler);
+            tp.fillText(-grid_size * i / 10, xToPixel(0) + 20, yToPixel(-grid_size * i) + 10);
         }
 
         //tp.translate(y_axis_distance_grid_lines*grid_size, x_axis_distance_grid_lines*grid_size);

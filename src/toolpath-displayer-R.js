@@ -45,7 +45,7 @@ $(function () {
     var toolX = null;
     var toolY = null;
     var toolSave = null;
-    var toolRadius = 7;
+    var toolRadius = 10;
     var toolRectWH = toolRadius * 2 + 20;  // Slop to encompass the entire image area
 
     var drawTool = function (pos) {
@@ -62,9 +62,15 @@ $(function () {
     }
 
     var drawOrigin = function () {
-        //tp.clearRect(0, 0, canvas.width, canvas.height);
+        var canvas_width = canvas.width;
+        var canvas_height = canvas.height;
 
-        var grid_size = 40;
+        var width_mm = canvas_width/scaler;
+
+        var tick_count = 10;
+
+        var grid_size = Math.round(width_mm/tick_count/10)*10;
+
         var x_axis_distance_grid_lines = 0;
         var y_axis_distance_grid_lines = 0;
         var x_axis_starting_point = { number: 1, suffix: '' };
@@ -80,9 +86,9 @@ $(function () {
         // no of horizontal grid lines
         var num_lines_y = Math.floor(canvas_width / grid_size);
 
-        var lw_grid = 4.9 / 4 / scaler * upscaler;
-        var lw_tick = 1 * scaler;
-        var len_tick = 2 * scaler;
+        var lw_grid = .75 * upscaler;
+        var lw_tick = 5;
+        var len_tick = 10;
         var text_grid = '35px Arial';
 
         // Draw grid lines along X-axis
@@ -136,14 +142,14 @@ $(function () {
             tp.strokeStyle = "#000000";
 
             // Draw a tick mark 6px long (-3 to 3)
-            tp.moveTo(xToPixel(grid_size * i) + 0.5, yToPixel(0) - len_tick);
-            tp.lineTo(xToPixel(grid_size * i) + 0.5, yToPixel(0) + len_tick);
+            tp.moveTo(xToPixel(grid_size * i) + 0.5, 0 - len_tick);
+            tp.lineTo(xToPixel(grid_size * i) + 0.5, 0 + len_tick);
             tp.stroke();
 
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'start';
-            tp.fillText(grid_size * i / 10, xToPixel(grid_size * i) - 5.5 * scaler, yToPixel(0) + 10 * scaler);
+            tp.fillText(grid_size * i / 10, xToPixel(grid_size * i) - 13, 0 + 45);
         }
 
         // Ticks marks along the negative X-axis
@@ -160,7 +166,7 @@ $(function () {
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'end';
-            tp.fillText(grid_size * i / 10, - xToPixel(grid_size * i) - 5.5 * scaler, yToPixel(0) + 10 * scaler);
+            tp.fillText(-grid_size * i / 10, xToPixel(-grid_size * i) + 13, 0 + 45);
         }
 
         // Ticks marks along the positive Y-axis
@@ -178,7 +184,7 @@ $(function () {
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'start';
-            tp.fillText(grid_size * i / 10, xToPixel(0) - 20 * scaler, yToPixel(grid_size * i) - 6 * scaler);
+            tp.fillText(grid_size * i / 10, xToPixel(0) + 20, yToPixel(grid_size * i) + 10);
         }
 
         // Ticks marks along the negative Y-axis
@@ -196,9 +202,10 @@ $(function () {
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'start';
-            tp.fillText(-grid_size * i / 10, xToPixel(0) - 20 * scaler, yToPixel(-grid_size * i) + 6 * scaler);
+            tp.fillText(-grid_size * i / 10, xToPixel(0) + 20, yToPixel(-grid_size * i) + 10);
         }
 
+        //tp.translate(y_axis_distance_grid_lines*grid_size, x_axis_distance_grid_lines*grid_size);
     }
 
     var xOffset = 0;
@@ -242,7 +249,7 @@ $(function () {
             imageHeight = 1;
         }
         var shrink = 0.90;
-        inset = 20 * upscaler;
+        inset = 0 * upscaler;
         var scaleX = (canvas.width - inset) / imageWidth;
         var scaleY = (canvas.height - inset) / imageHeight;
         var minScale = Math.min(scaleX, scaleY);
@@ -264,14 +271,6 @@ $(function () {
         tp.fillStyle = "black";
         tp.font = "14px Ariel";
         tp.textAlign = "center";
-        tp.textBaseline = "bottom";
-        //tp.fillText(formatLimit(bbox.min.y), imageRight / 2, canvas.height - inset);
-        tp.textBaseline = "top";
-        //tp.fillText(formatLimit(bbox.max.y), imageRight / 2, canvas.height - inset - imageTop);
-        tp.textAlign = "left";
-        tp.textBaseline = "center";
-        //tp.fillText(formatLimit(bbox.min.x), inset, canvas.height - inset - imageTop / 2);
-        tp.textAlign = "right";
         tp.textBaseline = "center";
         //tp.fillText(formatLimit(bbox.max.x), inset + imageRight, canvas.height - inset - imageTop / 2);
         // Transform the path coordinate system so the image fills the canvas
