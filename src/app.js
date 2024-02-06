@@ -997,8 +997,14 @@ cnc.updateView = function() {
 
     //document.getElementById('active-state').innerHTML = rateText;
     var stateText = stateName == 'Error' ? "Error: " + errorMessage : stateName;
+    
+    if (stateName.includes('error')){
+        document.getElementById('current-error').innerHTML = stateText;
+    }else{
+        document.getElementById('current-error').innerHTML = "";
+        document.getElementById('current-state').innerHTML = stateText;
+    }
 
-    document.getElementById('current-state').innerHTML = stateText;
     //document.getElementById('current-error').innerHTML = errorMessage;
 
     if (machineWorkflow == MACHINE_RUN || machineWorkflow == MACHINE_HOLD || machineWorkflow == MACHINE_STOP) {
