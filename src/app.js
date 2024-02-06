@@ -194,6 +194,13 @@ $(function () {
         return 'P' + String(Number(modal.wcs.substring(1)) - 53);
     }
 
+    cnc.updateSpindleFeedrate = function () {
+        var rateText = Number(velocity).toFixed(0);
+        var volt = Number(spindleSpeed/1000*24).toFixed(2);
+        document.getElementById('active-state').innerHTML = rateText;
+        document.getElementById('spindle-state').innerHTML = volt;
+    }
+
     cnc.setAxisByValue = function (axis, coordinate) {
         cnc.click();
         controller.command('gcode', 'G10 L20 ' + cnc.currentAxisPNum() + ' ' + axis + coordinate);
@@ -569,6 +576,8 @@ $(function () {
         wpos.a *= factor;
 
         console.log(status);
+        console.log(parserstate);
+        updateSpindleFeedrate();
 
         if (status.feedrate) {
             velocity = status.feedrate * factor;
@@ -1056,13 +1065,6 @@ $(function () {
             ? modal.distance
             : "<div style='color:red'>" + modal.distance + "</div>";
         $('[data-route="workspace"] [id="distance"]').html(distanceText);
-
-        var rateText = Number(velocity).toFixed(0);
-
-        var volt = Number(spindleSpeed/1000*24).toFixed(2);
-
-        document.getElementById('active-state').innerHTML = rateText;
-        document.getElementById('spindle-state').innerHTML = volt;
 
         var stateText = stateName == 'Error' ? "Error: " + errorMessage : stateName;
 
