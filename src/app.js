@@ -256,7 +256,7 @@ $(function () {
         $('[data-route="workspace"] select[data-name="select-distance"]').val(distance);
     }
 
-    cnc.click = function () { cnc.clicksound.play() }
+    cnc.click = function () { return }
 
     cnc.sendMove = function (cmd) {
         cnc.click();
