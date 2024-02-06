@@ -41,7 +41,6 @@ $(function () {
     var modal = {};
     var senderHold = false;
     var senderHoldReason = '';
-    var spindleSpeed = 0;
 
     cnc.initState = function () {
         // Select the "Load GCode File" heading instead of any file
@@ -638,8 +637,6 @@ $(function () {
 
         // Smoothie reports both mpos and wpos in the current units
         // so no scaling is necessary
-
-        spindleSpeed = status.spindle;
 
         // The following feedrate code is untested
         if (status.currentFeedrate) {
