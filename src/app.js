@@ -1036,7 +1036,7 @@ $(function () {
         console.log(velocity, "velocity");
         console.log(rateText);
 
-        //document.getElementById('active-state').innerHTML = rateText;
+        document.getElementById('active-state').innerHTML = rateText;
         var stateText = stateName == 'Error' ? "Error: " + errorMessage : stateName;
 
         if (stateName.includes('error')) {
