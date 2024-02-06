@@ -131,7 +131,7 @@ $(function () {
         $('[data-route="connection"] [data-name="btn-open"]').prop('disabled', false);
         $('[data-route="connection"] [data-name="btn-close"]').prop('disabled', true);
 
-        $('[data-route="workspace"] [data-name="active-state"]').text('NoConnect');
+        $('[data-route="workspace"] [data-name="active-state"]').text('-');
 
         root.location = '#/connection';
     });
@@ -1032,9 +1032,9 @@ $(function () {
             : "<div style='color:red'>" + modal.distance + "</div>";
         $('[data-route="workspace"] [id="distance"]').html(distanceText);
 
-        //var rateText = modal.units == 'G21' ? Number(velocity).toFixed(0) + ' mm/min' : Number(velocity).toFixed(2) + ' in/min';
+        var rateText = Number(velocity).toFixed(0) + ' mm/min';
 
-        //document.getElementById('active-state').innerHTML = rateText;
+        document.getElementById('active-state').innerHTML = rateText;
         var stateText = stateName == 'Error' ? "Error: " + errorMessage : stateName;
 
         if (stateName.includes('error')) {
@@ -1330,7 +1330,7 @@ $(function () {
     // Workspace
     //
     $('[data-route="workspace"] [data-name="btn-dropdown"]').dropdown();
-    $('[data-route="workspace"] [data-name="active-state"]').text('NoConnect');
+    $('[data-route="workspace"] [data-name="active-state"]').text('-');
     $('[data-route="workspace"] select[data-name="select-distance"]').val('10');
 
     cycleDistance = function (up) {
