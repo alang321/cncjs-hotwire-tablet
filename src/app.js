@@ -215,7 +215,7 @@ $(function () {
     
     cnc.hotwireOn = function () {
         var power = slider.value;
-        controller.command('lasertest:on', Math.round(power * (1000 / 24)) / 10, 0, 1000);
+        controller.command('lasertest:on', Number(power * (100 / 24)).toFixed(1), 0, 1000);
     }
     
     cnc.hotwireOff = function () {
