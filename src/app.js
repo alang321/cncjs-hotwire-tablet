@@ -577,7 +577,6 @@ $(function () {
 
         console.log(status);
         console.log(parserstate);
-        updateSpindleFeedrate();
 
         if (status.feedrate) {
             velocity = status.feedrate * factor;
@@ -936,6 +935,8 @@ $(function () {
         // if (cnc.filename == '') {
         //	canStart = false;
         //}
+        
+        updateSpindleFeedrate();
 
         grblReportingUnits = 0;
 
