@@ -213,7 +213,7 @@ $(function () {
         cnc.setAxisByValue(axis, document.getElementById(field).value);
     }
     
-    cnc.hotwireOn = function (power) {
+    cnc.hotwireOn = function () {
         controller.command('lasertest:on', Math.round(power * (1000 / 24)) / 10, 0, 1000);
     }
     
@@ -221,9 +221,6 @@ $(function () {
         controller.command('lasertest:off');
     }
     
-    cnc.setFeedrate = function (feedrate) {
-        controller.command('lasertest:off');
-    }
 
     cnc.MDIcmd = function (value) {
         cnc.click();
