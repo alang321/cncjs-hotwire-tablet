@@ -62,6 +62,7 @@ $(function () {
     }
 
     var drawOrigin = function () {
+        grid_drawn = true;
         var canvas_width = canvas.width;
         var canvas_height = canvas.height;
 
@@ -89,7 +90,7 @@ $(function () {
         var lw_grid = .75 * upscaler;
         var lw_tick = 5;
         var len_tick = 10;
-        var text_grid = '35px Arial';
+        var text_grid = '50px Arial';
 
         // Draw grid lines along X-axis
         for (var i = 0; i <= num_lines_x; i++) {
@@ -149,7 +150,7 @@ $(function () {
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'start';
-            tp.fillText(grid_size * i / 10, xToPixel(grid_size * i) - 13, 0 + 45);
+            tp.fillText(grid_size * i / 10, xToPixel(grid_size * i) - 23, 0 + 65);
         }
 
         // Ticks marks along the negative X-axis
@@ -166,7 +167,7 @@ $(function () {
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'end';
-            tp.fillText(-grid_size * i / 10, xToPixel(-grid_size * i) + 13, 0 + 45);
+            tp.fillText(-grid_size * i / 10, xToPixel(-grid_size * i) + 23, 0 + 65);
         }
 
         // Ticks marks along the positive Y-axis
@@ -184,7 +185,7 @@ $(function () {
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'start';
-            tp.fillText(grid_size * i / 10, xToPixel(0) + 20, yToPixel(grid_size * i) + 10);
+            tp.fillText(grid_size * i / 10, xToPixel(0) + 20, yToPixel(grid_size * i) + 15);
         }
 
         // Ticks marks along the negative Y-axis
@@ -202,7 +203,7 @@ $(function () {
             // Text value at that point
             tp.font = text_grid;
             tp.textAlign = 'start';
-            tp.fillText(-grid_size * i / 10, xToPixel(0) + 20, yToPixel(-grid_size * i) + 10);
+            tp.fillText(-grid_size * i / 10, xToPixel(0) + 20, yToPixel(-grid_size * i) + 15);
         }
 
         //tp.translate(y_axis_distance_grid_lines*grid_size, x_axis_distance_grid_lines*grid_size);
@@ -466,6 +467,7 @@ $(function () {
     };
 
     var offset;
+    var grid_drawn = false;
 
     ToolpathDisplayerR.prototype.showToolpathR = function (gcode, wpos, mpos) {
         inInches = $('[data-route="workspace"] [id="units"]').text() != 'mm';
@@ -510,6 +512,39 @@ $(function () {
     };
 
     ToolpathDisplayerR.prototype.reDrawToolR = function (modal, wpos) {
+        if (!grid_drawn) {
+
+            var factor = 1.0;
+
+            var initialPosition = {
+                x: wpos.x * factor,
+                y: wpos.y * factor,
+                z: wpos.z * factor,
+                a: wpos.a * factor
+            };
+
+            bbox.min.x = 0;
+            bbox.min.y = 0;
+            bbox.max.x = 400;
+            bbox.max.y = 200;
+            bboxIsSet = true;
+
+            offset = {
+                x: 0,
+                y: 0,
+                z: 0,
+                a: 0
+            };
+
+            bboxHandlersR.position = initialPosition;
+
+            transformCanvas();
+            if (!bboxIsSet) {
+                return;
+            }
+
+            drawTool(initialPosition);
+        }
         if (toolSave != null) {
             tp.putImageData(toolSave, toolX, toolY);
             var factor = 1.0;
