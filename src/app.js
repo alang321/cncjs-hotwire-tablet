@@ -1061,7 +1061,7 @@ $(function () {
 
         var rateText = Number(velocity).toFixed(0);
 
-        var volt = Number(voltText/1000*24).toFixed(2);
+        var volt = Number(spindleSpeed/1000*24).toFixed(2);
 
         document.getElementById('active-state').innerHTML = rateText;
         document.getElementById('spindle-state').innerHTML = volt;
