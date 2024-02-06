@@ -567,6 +567,8 @@ $(function () {
         wpos.z *= factor;
         wpos.a *= factor;
 
+        console.log(status);
+
         if (status.feedrate) {
             velocity = status.feedrate * factor;
         } else if (parserstate.feedrate) {
