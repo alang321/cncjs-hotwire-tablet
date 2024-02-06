@@ -578,22 +578,26 @@ $(function () {
         console.log(status);
         console.log(parserstate);
 
-        if (status.feedrate) {
-            velocity = status.feedrate * factor;
-        } else if (parserstate.feedrate) {
-            velocity = parserstate.feedrate * factor;
-        }
+        //if (status.feedrate) {
+        //    velocity = status.feedrate * factor;
+        //} else if (parserstate.feedrate) {
+        //    velocity = parserstate.feedrate * factor;
+        //}
 
-        if (status.spindle) {
-            spindleSpeed = status.spindle;
-        } else if (parserstate.spindle) {
-            spindleSpeed = parserstate.spindle;
-        }
+        spindleSpeed = status.spindle;
+        velocity = status.feedrate * factor;
+        //if (status.spindle) {
+        //    spindleSpeed = status.spindle;
+        //} else if (parserstate.spindle) {
+        //    spindleSpeed = parserstate.spindle;
+        //}
         spindleDirection = modal.spindle;
 
         feedOverride = status.ov[0] / 100.0;
         rapidOverride = status.ov[1] / 100.0;
         spindleOverride = status.ov[2] / 100.0;
+
+        console.log(feedOverride, rapidOverride, spindleOverride);
 
         cnc.updateView();
     }
