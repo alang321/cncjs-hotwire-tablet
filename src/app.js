@@ -930,8 +930,6 @@ $(function () {
 
         grblReportingUnits = 0;
 
-        
-
         var cannotClickJog = machineWorkflow > MACHINE_IDLE && machineWorkflow != MACHINE_RUN;
         $('[data-route="workspace"] .control-pad .jog-controls .btn').prop('disabled', cannotClickJog);
         $('[data-route="workspace"] .control-pad .form-control').prop('disabled', cannotClick);
