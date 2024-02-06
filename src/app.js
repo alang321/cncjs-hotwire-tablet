@@ -35,12 +35,13 @@ $(function () {
     var machineWorkflow = MACHINE_STALL;
     var wpos = {}, mpos = {};
     var velocity = 0;
-    var spindleDirection, spindleSpeed;
+    var spindleDirection;
     var stateName = "Init failed";
     var elapsedTime = 0;
     var modal = {};
     var senderHold = false;
     var senderHoldReason = '';
+    var spindleSpeed = 0;
 
     cnc.initState = function () {
         // Select the "Load GCode File" heading instead of any file
@@ -582,7 +583,12 @@ $(function () {
         } else if (parserstate.feedrate) {
             velocity = parserstate.feedrate * factor;
         }
-        spindleSpeed = parserstate.spindle;
+
+        if (status.spindle) {
+            spindleSpeed = status.spindle;
+        } else if (parserstate.spindle) {
+            spindleSpeed = parserstate.spindle;
+        }
         spindleDirection = modal.spindle;
 
         feedOverride = status.ov[0] / 100.0;
@@ -1029,17 +1035,7 @@ $(function () {
                 enableButtom('unlock-btn', 'white', 'Unlock');
                 break;
         }
-
-        if (spindleSpeed) {
-            var spindleText = 'Off';
-            switch (spindleDirection) {
-                case 'M3': spindleText = 'CW'; break;
-                case 'M4': spindleText = 'CCW'; break;
-                case 'M5': spindleText = 'Off'; break;
-                default: spindleText = 'Off'; break;
-            }
-            $('[data-route="workspace"] [id="spindle"]').text(Number(spindleSpeed) + ' RPM ' + spindleText);
-        }
+        
         // Nonzero receivedLines is a good indicator of GCode execution
         // as opposed to jogging, etc.
         if (receivedLines && startTime) {
