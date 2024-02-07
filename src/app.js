@@ -718,6 +718,8 @@ $(function () {
             maxFeedrate[1] = settings['$111'];
             maxFeedrate[2] = settings['$112'];
             maxFeedrate[3] = settings['$113'];
+            
+            console.log("in here");
         }
 
         if (typeof savedGrblState !== 'undefined') {
@@ -1026,7 +1028,8 @@ $(function () {
         $('[data-route="workspace"] .axis-position .position').prop('disabled', cannotClick);
 
 
-
+        
+        console.log("update", maxFeedrate[0]);
         $('[data-route="workspace"] [id="max-vel-z"]').prop('disabled', cannotClick);
 
         if(maxFeedrate[0] != -1){
