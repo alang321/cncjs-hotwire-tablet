@@ -1033,10 +1033,8 @@ $(function () {
         $('[data-route="workspace"] [id="max-vel-z"]').prop('disabled', cannotClick);
 
         if(maxFeedrate[0] != -1){
-            console.log("yo");
-            $('[data-route="workspace"] [id="max-vel-z"]').prop('disabled', false);
+            console.log("yo", maxFeedrate[2]);
             document.getElementById('max-vel-z').value = maxFeedrate[2];
-            $('[data-route="workspace"] [id="max-vel-z"]').prop('disabled', true);
         }
 
 
