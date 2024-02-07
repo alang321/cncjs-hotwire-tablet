@@ -1034,7 +1034,8 @@ $(function () {
 
         if(maxFeedrate[0] != -1){
             console.log("yo", maxFeedrate[2]);
-            document.getElementById('max-vel-z').value = maxFeedrate[2];
+            var element = document.getElementById('max-vel-z');
+            element.value = maxFeedrate[2];
         }
 
 
