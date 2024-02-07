@@ -318,6 +318,38 @@ $(function () {
         // No need to fix the button label, as that will be done by the status watcher
     }
 
+    cnc.setMaxFeedrate = function (axis, value) {
+        if (value) {
+            maxFeedrate[axis] = value;
+            var cmd = '$' + (110 + axis) + '=' + value;
+            controller.command('gcode', cmd);
+        }
+    }
+
+    cnc.maxFeedrateZ = function () {
+        document.getElementById('max-vel-z').innerHTML = maxFeedrate[0];
+        var value = document.getElementById('max-vel-z').value;
+        cnc.setMaxFeedrate(2, value);
+    }
+
+    cnc.maxFeedrateA = function () {
+        document.getElementById('max-vel-z').innerHTML = maxFeedrate[0];
+        var value = document.getElementById('max-vel-z').value;
+        cnc.setMaxFeedrate(2, value);
+    }
+
+    cnc.maxFeedrateX = function () {
+        document.getElementById('max-vel-z').innerHTML = maxFeedrate[0];
+        var value = document.getElementById('max-vel-z').value;
+        cnc.setMaxFeedrate(2, value);
+    }
+
+    cnc.maxFeedrateY = function () {
+        document.getElementById('max-vel-z').innerHTML = maxFeedrate[0];
+        var value = document.getElementById('max-vel-z').value;
+        cnc.setMaxFeedrate(2, value);
+    }
+
     cnc.btnSetDistance = function () {
         cnc.click();
         var distance = event.target.innerText;
@@ -963,7 +995,17 @@ $(function () {
         $('[data-route="workspace"] .axis-position .btn').prop('disabled', cannotClick);
         $('[data-route="workspace"] .axis-position .position').prop('disabled', cannotClick);
 
-        $('[data-route="workspace"] [id="max-vel-xl"]').prop('disabled', cannotClick);
+
+
+        $('[data-route="workspace"] [id="max-vel-z"]').prop('disabled', cannotClick);
+
+        if(maxFeedrate[0] != -1){
+            document.getElementById('max-vel-z').val(maxFeedrate[2]);
+        }
+
+
+
+
 
         var newUnits = modal.units == 'G21' ? 'mm' : 'Inch';
         if ($('[data-route="workspace"] [id="units"]').text() != newUnits) {
