@@ -329,6 +329,7 @@ $(function () {
     cnc.maxFeedrateZ = function () {
         document.getElementById('max-vel-z').value = maxFeedrate[0];
         var value = document.getElementById('max-vel-z').value;
+        console.log(value);
         cnc.setMaxFeedrate(2, value);
     }
 
