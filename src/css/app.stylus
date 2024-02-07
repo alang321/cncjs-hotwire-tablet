@@ -52,6 +52,9 @@
     .axis-position {
         text-align: right;
     }
+    .override {
+        text-align: right;
+    }
 
     .rotate-45deg {
         transform: rotate(45deg);

@@ -38,10 +38,18 @@
 [data-route="workspace"] .axis-position .row {
   padding-bottom: 5px;
 }
+[data-route="workspace"] .override .row {
+  padding-bottom: 5px;
+}
 [data-route="workspace"] .nav-panel .container-fluid {
   padding-bottom: 12px;
 }
 [data-route="workspace"] .axis-position .container-fluid {
+  background-color: azure;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+[data-route="workspace"] .override .container-fluid {
   background-color: azure;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -106,6 +114,10 @@
   width: 90%;
   text-align: center;
 }
+[data-route="workspace"] .override .btn {
+  width: 90%;
+  text-align: center;
+}
 
 [data-route="workspace"] .btn-units {
    text-align: left;
@@ -155,6 +167,9 @@
   padding-left: 0;
 }
 [data-route="workspace"] .axis-position .inset {
+  padding-left: 15px;
+}
+[data-route="workspace"] .override .inset {
   padding-left: 15px;
 }
 

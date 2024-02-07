@@ -43,6 +43,8 @@ $(function () {
     var senderHoldReason = '';
     var spindleSpeed = 0;
 
+    var maxFeedrate = [-1, -1, -1, -1];
+
     cnc.initState = function () {
         // Select the "Load GCode File" heading instead of any file
         cnc.showGCode('', '');
@@ -646,15 +648,21 @@ $(function () {
 
     controller.on('Grbl:settings', function (data) {
         var settings = data.settings || {};
-        if (settings['$13'] !== undefined) {
-            grblReportingUnits = Number(settings['$13']) || 0;
+        grblReportingUnits = 0;
 
-            if (typeof savedGrblState !== 'undefined') {
-                renderGrblState(savedGrblState);
-                // Don't re-render the state if we get later settings reports,
-                // as the savedGrblState is probably stale.
-                savedGrblState = undefined;
-            }
+        
+        if (settings['$110'] !== undefined && settings['$111'] !== undefined && settings['$112'] !== undefined && settings['$113'] !== undefined) {
+            maxFeedrate[0] = settings['$110'];
+            maxFeedrate[1] = settings['$111'];
+            maxFeedrate[2] = settings['$112'];
+            maxFeedrate[3] = settings['$113'];
+        }
+
+        if (typeof savedGrblState !== 'undefined') {
+            renderGrblState(savedGrblState);
+            // Don't re-render the state if we get later settings reports,
+            // as the savedGrblState is probably stale.
+            savedGrblState = undefined;
         }
     });
 
@@ -906,67 +914,35 @@ $(function () {
 
         var selector = $('[data-route="workspace"] select[data-name="select-distance"]');
         selector.empty();
-        if (units == "Inch") {
-            $('[data-route="workspace"] [id="jog00"]').text('0.001');
-            $('[data-route="workspace"] [id="jog01"]').text('0.01');
-            $('[data-route="workspace"] [id="jog02"]').text('0.1');
-            $('[data-route="workspace"] [id="jog03"]').text('1');
-            $('[data-route="workspace"] [id="jog10"]').text('0.003');
-            $('[data-route="workspace"] [id="jog11"]').text('0.03');
-            $('[data-route="workspace"] [id="jog12"]').text('0.3');
-            $('[data-route="workspace"] [id="jog13"]').text('3');
-            $('[data-route="workspace"] [id="jog20"]').text('0.005');
-            $('[data-route="workspace"] [id="jog21"]').text('0.05');
-            $('[data-route="workspace"] [id="jog22"]').text('0.5');
-            $('[data-route="workspace"] [id="jog23"]').text('5');
-            selector.append($("<option/>").text('0.00025'));
-            selector.append($("<option/>").text('0.0005'));
-            selector.append($("<option/>").text('0.001'));
-            selector.append($("<option/>").text('0.003'));
-            selector.append($("<option/>").text('0.005'));
-            selector.append($("<option/>").text('0.01'));
-            selector.append($("<option/>").text('0.03'));
-            selector.append($("<option/>").text('0.05'));
-            selector.append($("<option/>").text('0.1'));
-            selector.append($("<option/>").text('0.3'));
-            selector.append($("<option/>").text('0.5'));
-            selector.append($("<option/>").text('1'));
-            selector.append($("<option/>").text('3'));
-            selector.append($("<option/>").text('5'));
-            selector.append($("<option/>").text('10'));
-            selector.append($("<option/>").text('30'));
-            selector.val('10');
-        } else {
-            //$('[data-route="workspace"] [id="jog00"]').text('0.01');
-            //$('[data-route="workspace"] [id="jog01"]').text('0.1');
-            //$('[data-route="workspace"] [id="jog02"]').text('1');
-            //$('[data-route="workspace"] [id="jog03"]').text('10');
-            //$('[data-route="workspace"] [id="jog10"]').text('0.03');
-            //$('[data-route="workspace"] [id="jog11"]').text('0.3');
-            //$('[data-route="workspace"] [id="jog12"]').text('3');
-            //$('[data-route="workspace"] [id="jog13"]').text('30');
-            //$('[data-route="workspace"] [id="jog20"]').text('0.05');
-            //$('[data-route="workspace"] [id="jog21"]').text('0.5');
-            //$('[data-route="workspace"] [id="jog22"]').text('5');
-            //$('[data-route="workspace"] [id="jog23"]').text('50');
-            //selector.append($("<option/>").text('0.005'));
-            //selector.append($("<option/>").text('0.01'));
-            //selector.append($("<option/>").text('0.03'));
-            selector.append($("<option/>").text('0.05'));
-            selector.append($("<option/>").text('0.1'));
-            selector.append($("<option/>").text('0.2'));
-            selector.append($("<option/>").text('0.5'));
-            selector.append($("<option/>").text('1'));
-            selector.append($("<option/>").text('3'));
-            selector.append($("<option/>").text('5'));
-            selector.append($("<option/>").text('10'));
-            selector.append($("<option/>").text('30'));
-            selector.append($("<option/>").text('50'));
-            selector.append($("<option/>").text('100'));
-            selector.append($("<option/>").text('300'));
-            selector.append($("<option/>").text('600'));
-            selector.val(distance);
-        }
+        //$('[data-route="workspace"] [id="jog00"]').text('0.01');
+        //$('[data-route="workspace"] [id="jog01"]').text('0.1');
+        //$('[data-route="workspace"] [id="jog02"]').text('1');
+        //$('[data-route="workspace"] [id="jog03"]').text('10');
+        //$('[data-route="workspace"] [id="jog10"]').text('0.03');
+        //$('[data-route="workspace"] [id="jog11"]').text('0.3');
+        //$('[data-route="workspace"] [id="jog12"]').text('3');
+        //$('[data-route="workspace"] [id="jog13"]').text('30');
+        //$('[data-route="workspace"] [id="jog20"]').text('0.05');
+        //$('[data-route="workspace"] [id="jog21"]').text('0.5');
+        //$('[data-route="workspace"] [id="jog22"]').text('5');
+        //$('[data-route="workspace"] [id="jog23"]').text('50');
+        //selector.append($("<option/>").text('0.005'));
+        //selector.append($("<option/>").text('0.01'));
+        //selector.append($("<option/>").text('0.03'));
+        selector.append($("<option/>").text('0.05'));
+        selector.append($("<option/>").text('0.1'));
+        selector.append($("<option/>").text('0.2'));
+        selector.append($("<option/>").text('0.5'));
+        selector.append($("<option/>").text('1'));
+        selector.append($("<option/>").text('3'));
+        selector.append($("<option/>").text('5'));
+        selector.append($("<option/>").text('10'));
+        selector.append($("<option/>").text('30'));
+        selector.append($("<option/>").text('50'));
+        selector.append($("<option/>").text('100'));
+        selector.append($("<option/>").text('300'));
+        selector.append($("<option/>").text('600'));
+        selector.val(distance);
     }
 
     cnc.updateView = function () {
