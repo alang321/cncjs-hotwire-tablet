@@ -710,6 +710,8 @@ $(function () {
         var settings = data.settings || {};
         grblReportingUnits = 0;
 
+        console.log(settings);
+
         
         if (settings['$110'] !== undefined && settings['$111'] !== undefined && settings['$112'] !== undefined && settings['$113'] !== undefined) {
             maxFeedrate[0] = settings['$110'];
@@ -1031,6 +1033,7 @@ $(function () {
         $('[data-route="workspace"] [id="max-vel-a"]').prop('disabled', cannotClick);
 
         if(maxFeedrate[0] != -1){
+            console.log(maxFeedrate[2]);
             document.getElementById('max-vel-x').value = Math.round(maxFeedrate[0]);
             document.getElementById('max-vel-y').value = Math.round(maxFeedrate[1]);
             document.getElementById('max-vel-z').value = Math.round(maxFeedrate[2]);
