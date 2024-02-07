@@ -710,14 +710,17 @@ $(function () {
         var settings = data.settings || {};
         grblReportingUnits = 0;
 
-        console.log(settings);
-
         
         if (settings['$110'] !== undefined && settings['$111'] !== undefined && settings['$112'] !== undefined && settings['$113'] !== undefined) {
             maxFeedrate[0] = settings['$110'];
             maxFeedrate[1] = settings['$111'];
             maxFeedrate[2] = settings['$112'];
             maxFeedrate[3] = settings['$113'];
+            
+            document.getElementById('max-vel-x').value = Math.round(maxFeedrate[0]);
+            document.getElementById('max-vel-y').value = Math.round(maxFeedrate[1]);
+            document.getElementById('max-vel-z').value = Math.round(maxFeedrate[2]);
+            document.getElementById('max-vel-a').value = Math.round(maxFeedrate[3]);
         }
 
         if (typeof savedGrblState !== 'undefined') {
@@ -1032,13 +1035,6 @@ $(function () {
         $('[data-route="workspace"] [id="max-vel-z"]').prop('disabled', cannotClick);
         $('[data-route="workspace"] [id="max-vel-a"]').prop('disabled', cannotClick);
 
-        if(maxFeedrate[0] != -1){
-            console.log(maxFeedrate[2]);
-            document.getElementById('max-vel-x').value = Math.round(maxFeedrate[0]);
-            document.getElementById('max-vel-y').value = Math.round(maxFeedrate[1]);
-            document.getElementById('max-vel-z').value = Math.round(maxFeedrate[2]);
-            document.getElementById('max-vel-a').value = Math.round(maxFeedrate[3]);
-        }
 
 
         var newUnits = modal.units == 'G21' ? 'mm' : 'Inch';
