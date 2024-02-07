@@ -327,24 +327,55 @@ $(function () {
     }
 
     cnc.maxFeedrateZ = function () {
-        var value = document.getElementById('max-vel-z').value;
-        console.log(value);
-        cnc.setMaxFeedrate(2, value);
+        var idx = 2;
+        var element = document.getElementById('max-vel-z');
+        var value = element.value;
+        if (value > 0) {
+            cnc.setMaxFeedrate(idx, value);
+        }else{
+            if (maxFeedrate[idx] > 0) {
+                element.value = maxFeedrate[2];
+            }
+        }
     }
 
     cnc.maxFeedrateA = function () {
-        var value = document.getElementById('max-vel-a').value;
-        cnc.setMaxFeedrate(3, value);
+        var idx = 3;
+        var element = document.getElementById('max-vel-a');
+        var value = element.value;
+        if (value > 0) {
+            cnc.setMaxFeedrate(idx, value);
+        }else{
+            if (maxFeedrate[idx] > 0) {
+                element.value = maxFeedrate[2];
+            }
+        }
     }
 
     cnc.maxFeedrateX = function () {
-        var value = document.getElementById('max-vel-x').value;
-        cnc.setMaxFeedrate(0, value);
+        var idx = 0;
+        var element = document.getElementById('max-vel-x');
+        var value = element.value;
+        if (value > 0) {
+            cnc.setMaxFeedrate(idx, value);
+        }else{
+            if (maxFeedrate[idx] > 0) {
+                element.value = maxFeedrate[2];
+            }
+        }
     }
 
     cnc.maxFeedrateY = function () {
-        var value = document.getElementById('max-vel-y').value;
-        cnc.setMaxFeedrate(1, value);
+        var idx = 1;
+        var element = document.getElementById('max-vel-y');
+        var value = element.value;
+        if (value > 0) {
+            cnc.setMaxFeedrate(idx, value);
+        }else{
+            if (maxFeedrate[idx] > 0) {
+                element.value = maxFeedrate[2];
+            }
+        }
     }
 
     cnc.btnSetDistance = function () {
