@@ -319,7 +319,7 @@ $(function () {
     }
 
     cnc.setMaxFeedrate = function (axis, value) {
-        if (value) {
+        if (value > 0) {
             maxFeedrate[axis] = value;
             var cmd = '$' + (110 + axis) + '=' + value;
             controller.command('gcode', cmd);
@@ -333,17 +333,17 @@ $(function () {
     }
 
     cnc.maxFeedrateA = function () {
-        var value = document.getElementById('max-vel-z').value;
+        var value = document.getElementById('max-vel-a').value;
         cnc.setMaxFeedrate(3, value);
     }
 
     cnc.maxFeedrateX = function () {
-        var value = document.getElementById('max-vel-z').value;
+        var value = document.getElementById('max-vel-x').value;
         cnc.setMaxFeedrate(0, value);
     }
 
     cnc.maxFeedrateY = function () {
-        var value = document.getElementById('max-vel-z').value;
+        var value = document.getElementById('max-vel-y').value;
         cnc.setMaxFeedrate(1, value);
     }
 
@@ -678,6 +678,8 @@ $(function () {
     controller.on('Grbl:settings', function (data) {
         var settings = data.settings || {};
         grblReportingUnits = 0;
+
+        console.log("settings");
 
         
         if (settings['$110'] !== undefined && settings['$111'] !== undefined && settings['$112'] !== undefined && settings['$113'] !== undefined) {
