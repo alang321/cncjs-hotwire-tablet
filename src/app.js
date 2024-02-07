@@ -1031,7 +1031,6 @@ $(function () {
         $('[data-route="workspace"] [id="max-vel-a"]').prop('disabled', cannotClick);
 
         if(maxFeedrate[0] != -1){
-            console.log(maxFeedrate[2]);
             document.getElementById('max-vel-x').value = Math.round(maxFeedrate[0]);
             document.getElementById('max-vel-y').value = Math.round(maxFeedrate[1]);
             document.getElementById('max-vel-z').value = Math.round(maxFeedrate[2]);
