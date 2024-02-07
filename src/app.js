@@ -112,7 +112,7 @@ $(function () {
             // We work around that by deferring status reports until the settings report.
             // I commented this out because of https://github.com/cncjs/cncjs-shopfloor-tablet/issues/20
             controller.writeln('?');
-            //controller.writeln('$$');
+            controller.writeln('$$');
             //controller.writeln('?');
         }
 
