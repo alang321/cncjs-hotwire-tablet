@@ -327,26 +327,22 @@ $(function () {
     }
 
     cnc.maxFeedrateZ = function () {
-        document.getElementById('max-vel-z').value = maxFeedrate[0];
         var value = document.getElementById('max-vel-z').value;
         console.log(value);
         cnc.setMaxFeedrate(2, value);
     }
 
     cnc.maxFeedrateA = function () {
-        document.getElementById('max-vel-a').value = maxFeedrate[0];
         var value = document.getElementById('max-vel-z').value;
         cnc.setMaxFeedrate(3, value);
     }
 
     cnc.maxFeedrateX = function () {
-        document.getElementById('max-vel-x').value = maxFeedrate[0];
         var value = document.getElementById('max-vel-z').value;
         cnc.setMaxFeedrate(0, value);
     }
 
     cnc.maxFeedrateY = function () {
-        document.getElementById('max-vel-y').value = maxFeedrate[0];
         var value = document.getElementById('max-vel-z').value;
         cnc.setMaxFeedrate(1, value);
     }
