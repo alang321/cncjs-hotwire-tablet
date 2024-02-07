@@ -963,6 +963,8 @@ $(function () {
         $('[data-route="workspace"] .axis-position .btn').prop('disabled', cannotClick);
         $('[data-route="workspace"] .axis-position .position').prop('disabled', cannotClick);
 
+        $('[data-route="workspace"] [id="max-vel-xl"]').prop('disabled', cannotClick);
+
         var newUnits = modal.units == 'G21' ? 'mm' : 'Inch';
         if ($('[data-route="workspace"] [id="units"]').text() != newUnits) {
             $('[data-route="workspace"] [id="units"]').text(newUnits);
