@@ -986,6 +986,9 @@ $(function () {
                 enableButtom('sleep-btn', 'white', 'Sleep');
                 //allow unloc
                 enableButtom('unlock-btn', 'white', 'Unlock');
+
+                enableButtom('hotwire-set', 'white', 'Set');
+                enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_STOP:
             case MACHINE_IDLE:
@@ -1004,6 +1007,9 @@ $(function () {
                 enableButtom('sleep-btn', 'white', 'Sleep');
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
+
+                enableButtom('hotwire-set', 'white', 'Set');
+                enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_HOLD:
                 setLeftButton(true, green, 'Resume', resumeGCode);
@@ -1014,6 +1020,9 @@ $(function () {
                 disableButtom('sleep-btn', 'Sleep');
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
+
+                enableButtom('hotwire-set', 'white', 'Set');
+                enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_RUN:
                 setLeftButton(false, gray, 'Start', null);
@@ -1024,6 +1033,9 @@ $(function () {
                 disableButtom('sleep-btn', 'Sleep');
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
+
+                enableButtom('hotwire-set', 'white', 'Set');
+                enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_SLEEP:
                 setLeftButton(false, gray, 'Start', null);
@@ -1034,6 +1046,10 @@ $(function () {
                 enableButtom('sleep-btn', green, 'Wake');
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
+
+                
+                disableButtom('hotwire-set', 'Set');
+                disableButtom('hotwire-off', 'Off');
                 break;
             case MACHINE_ALARM:
                 setLeftButton(false, gray, 'Start', null);
@@ -1044,6 +1060,9 @@ $(function () {
                 disableButtom('sleep-btn', 'Sleep');
                 //allow unlock
                 enableButtom('unlock-btn', 'white', 'Unlock');
+
+                enableButtom('hotwire-set', 'white', 'Set');
+                enableButtom('hotwire-off', 'white', 'Off');
                 break;
         }
 
