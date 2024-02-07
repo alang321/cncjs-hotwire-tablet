@@ -1034,7 +1034,9 @@ $(function () {
 
         if(maxFeedrate[0] != -1){
             console.log("yo");
+            $('[data-route="workspace"] [id="max-vel-z"]').prop('disabled', false);
             document.getElementById('max-vel-z').value = maxFeedrate[2];
+            $('[data-route="workspace"] [id="max-vel-z"]').prop('disabled', true);
         }
 
 
