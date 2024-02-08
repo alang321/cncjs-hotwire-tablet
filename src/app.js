@@ -388,6 +388,7 @@ $(function () {
     cnc.selectFeedrateReference = function () {
         var element = document.getElementById('feedrate-reference');
         var value = element.value;
+        console.log(feedrate_reference);
         if (value > 0) {
             cnc.setFeedrateReference(value);
         }else{
