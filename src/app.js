@@ -44,6 +44,7 @@ $(function () {
     var spindleSpeed = 0;
 
     var maxFeedrate = [-1, -1, -1, -1];
+    var feedrate_reference = 0;
 
     cnc.initState = function () {
         // Select the "Load GCode File" heading instead of any file
@@ -334,7 +335,7 @@ $(function () {
             cnc.setMaxFeedrate(idx, value);
         }else{
             if (maxFeedrate[idx] > 0) {
-                element.value = maxFeedrate[2];
+                element.value = maxFeedrate[idx];
             }
         }
     }
@@ -347,7 +348,7 @@ $(function () {
             cnc.setMaxFeedrate(idx, value);
         }else{
             if (maxFeedrate[idx] > 0) {
-                element.value = maxFeedrate[2];
+                element.value = maxFeedrate[idx];
             }
         }
     }
@@ -360,7 +361,7 @@ $(function () {
             cnc.setMaxFeedrate(idx, value);
         }else{
             if (maxFeedrate[idx] > 0) {
-                element.value = maxFeedrate[2];
+                element.value = maxFeedrate[idx];
             }
         }
     }
@@ -373,8 +374,28 @@ $(function () {
             cnc.setMaxFeedrate(idx, value);
         }else{
             if (maxFeedrate[idx] > 0) {
-                element.value = maxFeedrate[2];
+                element.value = maxFeedrate[idx];
             }
+        }
+    }
+
+    cnc.selectFeedrateReference = function () {
+        var element = document.getElementById('feedrate-reference');
+        var value = element.value;
+        if (value > 0) {
+            cnc.setFeedrateReference(value);
+        }else{
+            if (feedrate_reference > 0) {
+                element.value = feedrate_reference;
+            }
+        }
+    }
+
+    cnc.setFeedrateReference = function (value) {
+        if (value > 0) {
+            feedrate_reference = value;
+            var cmd = '$' + (87) + '=' + value;
+            controller.command('gcode', cmd);
         }
     }
 
@@ -722,6 +743,11 @@ $(function () {
             document.getElementById('max-vel-a').value = Math.round(maxFeedrate[3]);
         }
 
+        if (settings['$87'] !== undefined) {
+            feedrate_reference = settings['$87'];
+            document.getElementById('feedrate-reference').value = Math.round(feedrate_reference);
+        }
+
         if (typeof savedGrblState !== 'undefined') {
             renderGrblState(savedGrblState);
             // Don't re-render the state if we get later settings reports,
@@ -1033,6 +1059,8 @@ $(function () {
         $('[data-route="workspace"] [id="max-vel-y"]').prop('disabled', cannotClick);
         $('[data-route="workspace"] [id="max-vel-z"]').prop('disabled', cannotClick);
         $('[data-route="workspace"] [id="max-vel-a"]').prop('disabled', cannotClick);
+
+        $('[data-route="workspace"] [id="feedrate-reference"]').prop('disabled', cannotClick);
 
 
 
