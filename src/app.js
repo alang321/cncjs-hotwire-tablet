@@ -1088,7 +1088,8 @@ $(function () {
                 //allow unloc
                 enableButtom('unlock-btn', 'white', 'Unlock');
 
-                enableButtom('hotwire-set', 'white', 'Set');
+                enableButtom('hotwire-set', 'white', 'Const.');
+                enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
                 enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_STOP:
@@ -1109,7 +1110,8 @@ $(function () {
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
 
-                enableButtom('hotwire-set', 'white', 'Set');
+                enableButtom('hotwire-set', 'white', 'Const.');
+                enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
                 enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_HOLD:
@@ -1122,7 +1124,8 @@ $(function () {
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
 
-                enableButtom('hotwire-set', 'white', 'Set');
+                enableButtom('hotwire-set', 'white', 'Const.');
+                enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
                 enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_RUN:
@@ -1135,7 +1138,8 @@ $(function () {
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
 
-                enableButtom('hotwire-set', 'white', 'Set');
+                enableButtom('hotwire-set', 'white', 'Const.');
+                enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
                 enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_SLEEP:
@@ -1148,8 +1152,8 @@ $(function () {
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
 
-                
-                disableButtom('hotwire-set', 'Set');
+                disableButtom('hotwire-set', 'Const.');
+                disableButtom('hotwire-set-dyn', 'Dyn.');
                 disableButtom('hotwire-off', 'Off');
                 break;
             case MACHINE_ALARM:
@@ -1162,7 +1166,8 @@ $(function () {
                 //allow unlock
                 enableButtom('unlock-btn', 'white', 'Unlock');
 
-                enableButtom('hotwire-set', 'white', 'Set');
+                enableButtom('hotwire-set', 'white', 'Const.');
+                enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
                 enableButtom('hotwire-off', 'white', 'Off');
                 break;
         }
