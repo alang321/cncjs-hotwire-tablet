@@ -222,6 +222,12 @@ $(function () {
         controller.command('lasertest:on', Number(power * (100 / 24)).toFixed(1), 0, 1000);
     }
     
+    cnc.hotwireOnDyn = function () {
+        var input = document.getElementById('demo');
+        var power = input.value;
+        controller.command('gcode', 'M4 S' + Number(power * (1000 / 24)).toFixed(1));
+    }
+    
     cnc.hotwireOff = function () {
         controller.command('lasertest:off');
     }
