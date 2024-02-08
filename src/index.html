@@ -745,65 +745,67 @@
             <div class="container-fluid" style="background-color: #f0fff0;">
 
                 <div class="row no-gutter">
-                    <div class="col-xs-2">
-                        <div class="col-xs-1"></div>
-                        <div class="col-xs-5 active-state"
-                            style="border: 1px; border-color: #ccc; border-style: solid; background-color: #eee; border-radius: 1mm; text-align: center;"
-                            id="active-state" data-name="active-state">-</div>
-                        <div class="col-xs-5 info-button" style="text-align: center; font-size: 18px;">
-                            <sup>mm</sup>&frasl;<sub>min</sub>
+                    <div class="col-xs-6">
+                        <div class="col-xs-3">
+                            <div class="col-xs-1"></div>
+                            <div class="col-xs-7 active-state"
+                                style="border: 1px; border-color: #ccc; border-style: solid; background-color: #eee; border-radius: 1mm; text-align: center;"
+                                id="active-state" data-name="active-state">-</div>
+                            <div class="col-xs-4 info-button" style="text-align: center; font-size: 18px;">
+                                <sup>mm</sup>&frasl;<sub>min</sub>
+                            </div>
                         </div>
-                    </div>
 
-                    <!--<div class="col-xs-1">
+                        <!--<div class="col-xs-1">
                         <div class="info-button"
                             style="border: 1px; border-color: #ccc; border-style: solid; background-color: #eee; border-radius: 1mm; text-align: right;"
                             id="feed-override" data-name="active-state">-</div>
                     </div>-->
 
-                    <div class="col-xs-4">
+                        <div class="col-xs-9">
 
-                        <div class="col-xs-2">
-                            <div class="info-button"
-                                style="border: 1px; border-color: #ccc; border-style: solid; background-color: #eee; border-radius: 1mm; text-align: right; margin-right: 5px;"
-                                id="feed-override" data-name="active-state">-</div>
-                        </div>
-                        <div class="col-xs-2">
-                            <button type="button"
-                                style="border-top-right-radius: 0%; border-bottom-right-radius: 0%; width: 100%; margin-right: 0; margin-left: 0;"
-                                class="btn btn-default" onclick="cnc.adjustFeedrate(-10)">
-                                -10%
-                            </button>
-                        </div>
-                        <div class="col-xs-2">
-                            <button type="button"
-                                style="border-radius: 0%; width: 100%; margin-right: 0; margin-left: 0;"
-                                class="btn btn-default" onclick="cnc.adjustFeedrate(-1)">
-                                -1%
-                            </button>
-                        </div>
-                        <div class="col-xs-2">
-                            <button type="button"
-                                style="border-radius: 0%; width: 100%; margin-right: 0; margin-left: 0;"
-                                class="btn btn-default" onclick="cnc.adjustFeedrate(1)">
-                                +1%
-                            </button>
-                        </div>
-                        <div class="col-xs-2">
-                            <button type="button"
-                                style="border-radius: 0%;  width: 100%; margin-right: 0; margin-left: 0;"
-                                class="btn btn-default" onclick="cnc.adjustFeedrate(10)">
-                                +10%
-                            </button>
-                        </div>
-                        <div class="col-xs-2">
+                            <div class="col-xs-2">
+                                <div class="info-button"
+                                    style="border: 1px; border-color: #ccc; border-style: solid; background-color: #eee; border-radius: 1mm; text-align: right; margin-right: 5px;"
+                                    id="feed-override" data-name="active-state">-</div>
+                            </div>
+                            <div class="col-xs-2">
+                                <button type="button"
+                                    style="border-top-right-radius: 0%; border-bottom-right-radius: 0%; width: 100%; margin-right: 0; margin-left: 0;"
+                                    class="btn btn-default" onclick="cnc.adjustFeedrate(-10)">
+                                    -10%
+                                </button>
+                            </div>
+                            <div class="col-xs-2">
+                                <button type="button"
+                                    style="border-radius: 0%; width: 100%; margin-right: 0; margin-left: 0;"
+                                    class="btn btn-default" onclick="cnc.adjustFeedrate(-1)">
+                                    -1%
+                                </button>
+                            </div>
+                            <div class="col-xs-2">
+                                <button type="button"
+                                    style="border-radius: 0%; width: 100%; margin-right: 0; margin-left: 0;"
+                                    class="btn btn-default" onclick="cnc.adjustFeedrate(1)">
+                                    +1%
+                                </button>
+                            </div>
+                            <div class="col-xs-2">
+                                <button type="button"
+                                    style="border-radius: 0%;  width: 100%; margin-right: 0; margin-left: 0;"
+                                    class="btn btn-default" onclick="cnc.adjustFeedrate(10)">
+                                    +10%
+                                </button>
+                            </div>
+                            <div class="col-xs-2">
 
-                            <button type="button" class="btn btn-default"
-                                style="border-top-left-radius: 0%; border-bottom-left-radius: 0%;  width: 100%; margin-right: 0; margin-left: 0;"
-                                onclick="cnc.adjustFeedrate(0)">
-                                <img style="border-top-left-radius: 0%; border-bottom-left-radius: 0%; margin: 0 auto; display: block;"
-                                    width="100%" height="100%" src="icons/reset.svg" />
-                            </button>
+                                <button type="button" class="btn btn-default"
+                                    style="border-top-left-radius: 0%; border-bottom-left-radius: 0%;  width: 100%; margin-right: 0; margin-left: 0;"
+                                    onclick="cnc.adjustFeedrate(0)">
+                                    <img style="border-top-left-radius: 0%; border-bottom-left-radius: 0%; margin: 0 auto; display: block;"
+                                        width="100%" height="100%" src="icons/reset.svg" />
+                                </button>
+                            </div>
                         </div>
                     </div>
 
