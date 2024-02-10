@@ -1258,7 +1258,7 @@ $(function () {
 
         var stateText = stateName == 'Error' ? "Error" : stateName;
 
-        if (!stateName.includes('error')) {
+        if (stateName.includes('error')) {
             document.getElementById('current-error').innerHTML = stateText;
         } else {
             document.getElementById('current-error').innerHTML = "";
