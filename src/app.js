@@ -1122,8 +1122,10 @@ $(function () {
         $('[data-route="workspace"] [id="dynamic-reference"]').prop('disabled', cannotClick);
         $('[data-route="workspace"] [id="dynamic-power-scale"]').prop('disabled', cannotClick);
 
-        var cannotClickSleep = machineWorkflow != MACHINE_SLEEP;
+        var cannotClickSleep = machineWorkflow == MACHINE_SLEEP;
         $('[data-route="workspace"] [id="hotwire-set"]').prop('disabled', cannotClickSleep);
+        $('[data-route="workspace"] [id="hotwire-off"]').prop('disabled', cannotClickSleep);
+        $('[data-route="workspace"] [id="hotwire-set-dyn"]').prop('disabled', cannotClickSleep);
 
 
 
@@ -1150,10 +1152,6 @@ $(function () {
                 enableButtom('sleep-btn', 'white', 'Sleep');
                 //allow unloc
                 enableButtom('unlock-btn', 'white', 'Unlock');
-
-                //enableButtom('hotwire-set', 'white', 'Const.');
-                enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
-                enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_STOP:
             case MACHINE_IDLE:
@@ -1172,10 +1170,6 @@ $(function () {
                 enableButtom('sleep-btn', 'white', 'Sleep');
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
-
-                //enableButtom('hotwire-set', 'white', 'Const.');
-                enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
-                enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_HOLD:
                 setLeftButton(true, green, 'Resume', resumeGCode);
@@ -1186,10 +1180,6 @@ $(function () {
                 disableButtom('sleep-btn', 'Sleep');
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
-
-                //enableButtom('hotwire-set', 'white', 'Const.');
-                enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
-                enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_RUN:
                 setLeftButton(false, gray, 'Start', null);
@@ -1200,10 +1190,6 @@ $(function () {
                 disableButtom('sleep-btn', 'Sleep');
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
-
-                //enableButtom('hotwire-set', 'white', 'Const.');
-                enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
-                enableButtom('hotwire-off', 'white', 'Off');
                 break;
             case MACHINE_SLEEP:
                 setLeftButton(false, gray, 'Start', null);
@@ -1214,10 +1200,6 @@ $(function () {
                 enableButtom('sleep-btn', green, 'Wake');
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
-
-                //disableButtom('hotwire-set', 'Const.');
-                disableButtom('hotwire-set-dyn', 'Dyn.');
-                disableButtom('hotwire-off', 'Off');
                 break;
             case MACHINE_ALARM:
                 setLeftButton(false, gray, 'Start', null);
@@ -1228,10 +1210,6 @@ $(function () {
                 disableButtom('sleep-btn', 'Sleep');
                 //allow unlock
                 enableButtom('unlock-btn', 'white', 'Unlock');
-
-                //enableButtom('hotwire-set', 'white', 'Const.');
-                enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
-                enableButtom('hotwire-off', 'white', 'Off');
                 break;
         }
 
