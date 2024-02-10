@@ -1013,20 +1013,16 @@ $(function () {
 
     enableButtom = function (name, color, text) {
         var button = document.getElementById(name);
-        if (button.disabled == true) {
-            button.disabled = false;
-            button.style.backgroundColor = color;
-            button.innerText = text;
-        }
+        button.disabled = false;
+        button.style.backgroundColor = color;
+        button.innerText = text;
     }
 
     disableButtom = function (name, text) {
         var button = document.getElementById(name);
-        if (button.disabled == false) {
-            button.disabled = true;
-            //button.style.backgroundColor = '#f6f6f6';
-            button.innerText = text;
-        }
+        button.disabled = true;
+        button.style.backgroundColor = '#f6f6f6';
+        button.innerText = text;
     }
 
     var leftButtonHandler;
