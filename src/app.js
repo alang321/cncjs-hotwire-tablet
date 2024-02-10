@@ -1157,7 +1157,7 @@ $(function () {
             case MACHINE_IDLE:
                 if (gCodeLoaded) {
                     // A GCode file is ready to go
-                    setLeftButton(true, green, 'Start', runGCode);
+                    setLeftButton(true, green, 'Start', zeroAndRunGCode);
                     setRightButton(false, gray, 'Pause', null);
                 } else {
                     // Can't start because no GCode to run
@@ -1483,6 +1483,14 @@ $(function () {
 
     runGCode = function () {
         cnc.click();
+        running = true;
+        cnc.controller.command('gcode:start')
+        startTime = new Date().getTime();
+    }
+
+    zeroAndRunGCode = function () {
+        cnc.click();
+        zeroAllAxes();
         running = true;
         cnc.controller.command('gcode:start')
         startTime = new Date().getTime();
