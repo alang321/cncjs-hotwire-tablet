@@ -82,9 +82,7 @@
             <div class="container-fluid">
                 <div class="row no-gutter">
                     <div class="col-xs-3">
-                        <div class="col-xs-6 active-state" id="current-state">
-                        </div>
-                        <div class="col-xs-6 active-state" id="current-error">
+                        <div class="col-xs-12 active-state" id="current-state">
                         </div>
                     </div>
                     <!--<div class="col-xs-2">
@@ -992,8 +990,8 @@
                             <div class="col-xs-2">
                                 <button type="button" style="width: 100%;" class="btn btn-default" id="hotwire-off"
                                     onclick="cnc.hotwireOff()">
-                                    
-                                 Off
+
+                                    Off
                                 </button>
                             </div>
                             <div class="col-xs-2 info-button" style="text-align: center;">On:</div>
@@ -1038,34 +1036,42 @@
                 <div class="row no-gutter">
                     <div class="col-xs-2 info-button">Feedrate reference:</div>
                     <div class="col-xs-2">
+                        <div class="col-xs-10">
 
-                        <select class="form-control" id="feedrate-reference" onchange="cnc.selectFeedrateReference();">
-                            <option value="-1"></option>
-                            <option value="0">GRBL</option>
-                            <option value="1">Minimum</option>
-                            <option value="2">Average</option>
-                            <option value="3">Maximum</option>
-                        </select>
+                            <select class="form-control" id="feedrate-reference"
+                                onchange="cnc.selectFeedrateReference();">
+                                <option value="-1"></option>
+                                <option value="0">GRBL</option>
+                                <option value="1">Minimum</option>
+                                <option value="2">Average</option>
+                                <option value="3">Maximum</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="col-xs-2 info-button">Dynamic reference:</div>
                     <div class="col-xs-2">
+                        <div class="col-xs-10">
 
-                        <select class="form-control" id="dynamic-reference" onchange="cnc.selectDynamicReference();">
-                            <option value="-1"></option>
-                            <option value="0">GRBL</option>
-                            <option value="1">Minimum</option>
-                            <option value="2">Average</option>
-                            <option value="3">Maximum</option>
-                        </select>
+                            <select class="form-control" id="dynamic-reference"
+                                onchange="cnc.selectDynamicReference();">
+                                <option value="-1"></option>
+                                <option value="0">GRBL</option>
+                                <option value="1">Minimum</option>
+                                <option value="2">Average</option>
+                                <option value="3">Maximum</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="col-xs-2 info-button">Dynamic Scale:</div>
                     <div class="col-xs-2">
+                        <div class="col-xs-10">
 
-                        <select class="form-control" id="dynamic-power-scale" onchange="cnc.selectDynamicScale();">
-                            <option value="-1"></option>
-                            <option value="0">Voltage</option>
-                            <option value="1">Power</option>
-                        </select>
+                            <select class="form-control" id="dynamic-power-scale" onchange="cnc.selectDynamicScale();">
+                                <option value="-1"></option>
+                                <option value="0">Voltage</option>
+                                <option value="1">Power</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
