@@ -1122,6 +1122,9 @@ $(function () {
         $('[data-route="workspace"] [id="dynamic-reference"]').prop('disabled', cannotClick);
         $('[data-route="workspace"] [id="dynamic-power-scale"]').prop('disabled', cannotClick);
 
+        var cannotClickSleep = machineWorkflow != MACHINE_SLEEP;
+        $('[data-route="workspace"] [id="hotwire-set"]').prop('disabled', cannotClickSleep);
+
 
 
         var newUnits = modal.units == 'G21' ? 'mm' : 'Inch';
@@ -1148,7 +1151,7 @@ $(function () {
                 //allow unloc
                 enableButtom('unlock-btn', 'white', 'Unlock');
 
-                enableButtom('hotwire-set', 'white', 'Const.');
+                //enableButtom('hotwire-set', 'white', 'Const.');
                 enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
                 enableButtom('hotwire-off', 'white', 'Off');
                 break;
@@ -1170,7 +1173,7 @@ $(function () {
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
 
-                enableButtom('hotwire-set', 'white', 'Const.');
+                //enableButtom('hotwire-set', 'white', 'Const.');
                 enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
                 enableButtom('hotwire-off', 'white', 'Off');
                 break;
@@ -1184,7 +1187,7 @@ $(function () {
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
 
-                enableButtom('hotwire-set', 'white', 'Const.');
+                //enableButtom('hotwire-set', 'white', 'Const.');
                 enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
                 enableButtom('hotwire-off', 'white', 'Off');
                 break;
@@ -1198,7 +1201,7 @@ $(function () {
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
 
-                enableButtom('hotwire-set', 'white', 'Const.');
+                //enableButtom('hotwire-set', 'white', 'Const.');
                 enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
                 enableButtom('hotwire-off', 'white', 'Off');
                 break;
@@ -1212,7 +1215,7 @@ $(function () {
                 //dont allow unlock
                 disableButtom('unlock-btn', 'Unlock');
 
-                disableButtom('hotwire-set', 'Const.');
+                //disableButtom('hotwire-set', 'Const.');
                 disableButtom('hotwire-set-dyn', 'Dyn.');
                 disableButtom('hotwire-off', 'Off');
                 break;
@@ -1226,7 +1229,7 @@ $(function () {
                 //allow unlock
                 enableButtom('unlock-btn', 'white', 'Unlock');
 
-                enableButtom('hotwire-set', 'white', 'Const.');
+                //enableButtom('hotwire-set', 'white', 'Const.');
                 enableButtom('hotwire-set-dyn', 'white', 'Dyn.');
                 enableButtom('hotwire-off', 'white', 'Off');
                 break;
