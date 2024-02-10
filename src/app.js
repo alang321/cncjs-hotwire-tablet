@@ -1490,7 +1490,7 @@ $(function () {
 
     zeroAndRunGCode = function () {
         cnc.click();
-        zeroAllAxes();
+        cnc.zeroAllAxes();
         running = true;
         cnc.controller.command('gcode:start')
         startTime = new Date().getTime();
