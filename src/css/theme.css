@@ -82,6 +82,10 @@ touch-action: none;
 	transition: .15s;
 }
 
+input[type=number]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+  }
+
 
 .toggle-fullscreen-btn:hover path:nth-child(1),
 .toggle-fullscreen-btn:focus path:nth-child(1) {

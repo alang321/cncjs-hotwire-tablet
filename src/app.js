@@ -35,12 +35,18 @@ $(function () {
     var machineWorkflow = MACHINE_STALL;
     var wpos = {}, mpos = {};
     var velocity = 0;
-    var spindleDirection, spindleSpeed;
+    var spindleDirection;
     var stateName = "Init failed";
     var elapsedTime = 0;
     var modal = {};
     var senderHold = false;
     var senderHoldReason = '';
+    var spindleSpeed = 0;
+
+    var maxFeedrate = [-1, -1, -1, -1];
+    var feedrate_reference = -1;
+    var dynamic_reference = -1;
+    var dynamic_scale_power = -1;
 
     cnc.initState = function () {
         // Select the "Load GCode File" heading instead of any file
@@ -109,7 +115,7 @@ $(function () {
             // We work around that by deferring status reports until the settings report.
             // I commented this out because of https://github.com/cncjs/cncjs-shopfloor-tablet/issues/20
             controller.writeln('?');
-            //controller.writeln('$$');
+            controller.writeln('$$');
             //controller.writeln('?');
         }
 
@@ -131,7 +137,7 @@ $(function () {
         $('[data-route="connection"] [data-name="btn-open"]').prop('disabled', false);
         $('[data-route="connection"] [data-name="btn-close"]').prop('disabled', true);
 
-        $('[data-route="workspace"] [data-name="active-state"]').text('NoConnect');
+        $('[data-route="workspace"] [data-name="active-state"]').text('-');
 
         root.location = '#/connection';
     });
@@ -193,13 +199,42 @@ $(function () {
         return 'P' + String(Number(modal.wcs.substring(1)) - 53);
     }
 
+    cnc.updateSpindleFeedrate = function () {
+        var rateText = Number(velocity).toFixed(0);
+        var volt = Number(spindleSpeed/1000*24).toFixed(2);
+        document.getElementById('active-state').innerHTML = rateText;
+        document.getElementById('spindle-state').innerHTML = volt;
+
+        document.getElementById('feed-override').innerHTML = String(Number(feedOverride).toFixed(0)) + '%';
+        document.getElementById('hotwire-override').innerHTML = String(Number(spindleOverride).toFixed(0)) + '%';
+    }
+
     cnc.setAxisByValue = function (axis, coordinate) {
         cnc.click();
         controller.command('gcode', 'G10 L20 ' + cnc.currentAxisPNum() + ' ' + axis + coordinate);
     }
+
     cnc.setAxis = function (axis, field) {
         cnc.setAxisByValue(axis, document.getElementById(field).value);
     }
+    
+    cnc.hotwireOn = function () {
+        var input = document.getElementById('demo');
+        var power = input.value;
+        controller.command('lasertest:on', Number(power * (100 / 24)).toFixed(1), 0, 1000);
+    }
+    
+    cnc.hotwireOnDyn = function () {
+        var input = document.getElementById('demo');
+        var power = input.value;
+        controller.command('gcode', 'M4 S' + Number(power * (1000 / 24)).toFixed(1));
+    }
+    
+    cnc.hotwireOff = function () {
+        controller.command('lasertest:off');
+    }
+    
+
     cnc.MDIcmd = function (value) {
         cnc.click();
         controller.command('gcode', value);
@@ -207,6 +242,50 @@ $(function () {
 
     cnc.MDI = function (field) {
         cnc.MDIcmd(document.getElementById(field).value);
+    }
+
+    cnc.adjustTemperature = function (increment) {
+        switch (increment) {
+            case -10:
+                controller.command('spindleOverride', -10);
+                break;
+            case -1:
+                controller.command('spindleOverride', -1);
+                break;
+            case 1:
+                controller.command('spindleOverride', 1);
+                break;
+            case 10:
+                controller.command('spindleOverride', 10);
+                break;
+            case 0:
+                controller.command('spindleOverride', 0);
+                break;
+            default:
+                break;
+        }
+    }
+
+    cnc.adjustFeedrate = function (increment) {
+        switch (increment) {
+            case -10:
+                controller.command('feedOverride', -10);
+                break;
+            case -1:
+                controller.command('feedOverride', -1);
+                break;
+            case 1:
+                controller.command('feedOverride', 1);
+                break;
+            case 10:
+                controller.command('feedOverride', 10);
+                break;
+            case 0:
+                controller.command('feedOverride', 0);
+                break;
+            default:
+                break;
+        }
     }
 
     cnc.zeroAxis = function (axis) {
@@ -246,6 +325,126 @@ $(function () {
             controller.command('gcode', 'G21');
         }
         // No need to fix the button label, as that will be done by the status watcher
+    }
+
+    cnc.setMaxFeedrate = function (axis, value) {
+        if (value > 0) {
+            maxFeedrate[axis] = value;
+            var cmd = '$' + (110 + axis) + '=' + value;
+            controller.command('gcode', cmd);
+        }
+    }
+
+    cnc.maxFeedrateZ = function () {
+        var idx = 2;
+        var element = document.getElementById('max-vel-z');
+        var value = element.value;
+        if (value > 0) {
+            cnc.setMaxFeedrate(idx, value);
+        }else{
+            if (maxFeedrate[idx] > 0) {
+                element.value = maxFeedrate[idx];
+            }
+        }
+    }
+
+    cnc.maxFeedrateA = function () {
+        var idx = 3;
+        var element = document.getElementById('max-vel-a');
+        var value = element.value;
+        if (value > 0) {
+            cnc.setMaxFeedrate(idx, value);
+        }else{
+            if (maxFeedrate[idx] > 0) {
+                element.value = maxFeedrate[idx];
+            }
+        }
+    }
+
+    cnc.maxFeedrateX = function () {
+        var idx = 0;
+        var element = document.getElementById('max-vel-x');
+        var value = element.value;
+        if (value > 0) {
+            cnc.setMaxFeedrate(idx, value);
+        }else{
+            if (maxFeedrate[idx] > 0) {
+                element.value = maxFeedrate[idx];
+            }
+        }
+    }
+
+    cnc.maxFeedrateY = function () {
+        var idx = 1;
+        var element = document.getElementById('max-vel-y');
+        var value = element.value;
+        if (value > 0) {
+            cnc.setMaxFeedrate(idx, value);
+        }else{
+            if (maxFeedrate[idx] > 0) {
+                element.value = maxFeedrate[idx];
+            }
+        }
+    }
+
+    cnc.selectFeedrateReference = function () {
+        var element = document.getElementById('feedrate-reference');
+        var value = element.value;
+        if (value > -1) {
+            cnc.setFeedrateReference(value);
+        }else{
+            if (feedrate_reference > -1) {
+                element.value = feedrate_reference;
+            }
+        }
+    }
+
+    cnc.setFeedrateReference = function (value) {
+        if (value > -1) {
+            feedrate_reference = value;
+            var cmd = '$' + (87) + '=' + value;
+            controller.command('gcode', cmd);
+        }
+    }
+
+    cnc.selectDynamicReference = function () {
+        var element = document.getElementById('dynamic-reference');
+        var value = element.value;
+        if (value > -1) {
+            cnc.setDynamicReference(value);
+        }else{
+            if (dynamic_reference > -1) {
+                element.value = dynamic_reference;
+            }
+        }
+    }
+
+    cnc.setDynamicReference = function (value) {
+        if (value > -1) {
+            dynamic_reference = value;
+            var cmd = '$89=' + value;
+            controller.command('gcode', cmd);
+        }
+    }
+
+    cnc.selectDynamicScale = function () {
+        var element = document.getElementById('dynamic-power-scale');
+        var value = element.value;
+        if (value > -1) {
+            cnc.setDynamicScale(value);
+        }else{
+            if (dynamic_scale_power > -1) {
+                element.value = dynamic_scale_power;
+            }
+        }
+    }
+
+    cnc.setDynamicScale = function (value) {
+        if (value > -1) {
+            dynamic_scale_power = value;
+            var cmd = '$88=' + value;
+            controller.command('gcode', cmd);
+        }
     }
 
     cnc.btnSetDistance = function () {
@@ -545,17 +744,22 @@ $(function () {
         wpos.z *= factor;
         wpos.a *= factor;
 
-        if (status.feedrate) {
+        if (typeof status.feedrate !== 'undefined') {
             velocity = status.feedrate * factor;
-        } else if (parserstate.feedrate) {
+        } else if (typeof parserstate.feedrate !== 'undefined') {
             velocity = parserstate.feedrate * factor;
         }
-        spindleSpeed = parserstate.spindle;
+
+        if (typeof status.spindle !== 'undefined') {
+            spindleSpeed = status.spindle;
+        } else if (typeof parserstate.spindle !== 'undefined') {
+            spindleSpeed = parserstate.spindle;
+        }
         spindleDirection = modal.spindle;
 
-        feedOverride = status.ov[0] / 100.0;
+        feedOverride = status.ov[0];
         rapidOverride = status.ov[1] / 100.0;
-        spindleOverride = status.ov[2] / 100.0;
+        spindleOverride = status.ov[2];
 
         cnc.updateView();
     }
@@ -573,15 +777,40 @@ $(function () {
 
     controller.on('Grbl:settings', function (data) {
         var settings = data.settings || {};
-        if (settings['$13'] !== undefined) {
-            grblReportingUnits = Number(settings['$13']) || 0;
+        grblReportingUnits = 0;
+        
+        if (settings['$110'] !== undefined && settings['$111'] !== undefined && settings['$112'] !== undefined && settings['$113'] !== undefined) {
+            maxFeedrate[0] = settings['$110'];
+            maxFeedrate[1] = settings['$111'];
+            maxFeedrate[2] = settings['$112'];
+            maxFeedrate[3] = settings['$113'];
+            
+            document.getElementById('max-vel-x').value = Math.round(maxFeedrate[0]);
+            document.getElementById('max-vel-y').value = Math.round(maxFeedrate[1]);
+            document.getElementById('max-vel-z').value = Math.round(maxFeedrate[2]);
+            document.getElementById('max-vel-a').value = Math.round(maxFeedrate[3]);
+        }
 
-            if (typeof savedGrblState !== 'undefined') {
-                renderGrblState(savedGrblState);
-                // Don't re-render the state if we get later settings reports,
-                // as the savedGrblState is probably stale.
-                savedGrblState = undefined;
-            }
+        if (settings['$87'] !== undefined) {
+            feedrate_reference = settings['$87'];
+            document.getElementById('feedrate-reference').value = Math.round(feedrate_reference);
+        }
+
+        if (settings['$89'] !== undefined) {
+            dynamic_reference = settings['$89'];
+            document.getElementById('dynamic-reference').value = Math.round(dynamic_reference);
+        }
+
+        if (settings['$88'] !== undefined) {
+            dynamic_scale_power = settings['$88'];
+            document.getElementById('dynamic-power-scale').value = Math.round(dynamic_scale_power);
+        }
+
+        if (typeof savedGrblState !== 'undefined') {
+            renderGrblState(savedGrblState);
+            // Don't re-render the state if we get later settings reports,
+            // as the savedGrblState is probably stale.
+            savedGrblState = undefined;
         }
     });
 
@@ -853,10 +1082,10 @@ $(function () {
         // if (cnc.filename == '') {
         //	canStart = false;
         //}
+        
+        cnc.updateSpindleFeedrate();
 
         grblReportingUnits = 0;
-
-        
 
         var cannotClickJog = machineWorkflow > MACHINE_IDLE && machineWorkflow != MACHINE_RUN;
         $('[data-route="workspace"] .control-pad .jog-controls .btn').prop('disabled', cannotClickJog);
@@ -866,6 +1095,24 @@ $(function () {
         $('[data-route="workspace"] .mdi .btn').prop('disabled', cannotClick);
         $('[data-route="workspace"] .axis-position .btn').prop('disabled', cannotClick);
         $('[data-route="workspace"] .axis-position .position').prop('disabled', cannotClick);
+
+
+        
+        $('[data-route="workspace"] [id="max-vel-x"]').prop('disabled', cannotClick);
+        $('[data-route="workspace"] [id="max-vel-y"]').prop('disabled', cannotClick);
+        $('[data-route="workspace"] [id="max-vel-z"]').prop('disabled', cannotClick);
+        $('[data-route="workspace"] [id="max-vel-a"]').prop('disabled', cannotClick);
+
+        $('[data-route="workspace"] [id="feedrate-reference"]').prop('disabled', cannotClick);
+        $('[data-route="workspace"] [id="dynamic-reference"]').prop('disabled', cannotClick);
+        $('[data-route="workspace"] [id="dynamic-power-scale"]').prop('disabled', cannotClick);
+
+        var cannotClickSleep = machineWorkflow == MACHINE_SLEEP;
+        $('[data-route="workspace"] [id="hotwire-set"]').prop('disabled', cannotClickSleep);
+        $('[data-route="workspace"] [id="hotwire-off"]').prop('disabled', cannotClickSleep);
+        $('[data-route="workspace"] [id="hotwire-set-dyn"]').prop('disabled', cannotClickSleep);
+
+
 
         var newUnits = modal.units == 'G21' ? 'mm' : 'Inch';
         if ($('[data-route="workspace"] [id="units"]').text() != newUnits) {
@@ -895,7 +1142,7 @@ $(function () {
             case MACHINE_IDLE:
                 if (gCodeLoaded) {
                     // A GCode file is ready to go
-                    setLeftButton(true, green, 'Start', runGCode);
+                    setLeftButton(true, green, 'Start', zeroAndRunGCode);
                     setRightButton(false, gray, 'Pause', null);
                 } else {
                     // Can't start because no GCode to run
@@ -951,16 +1198,6 @@ $(function () {
                 break;
         }
 
-        if (spindleSpeed) {
-            var spindleText = 'Off';
-            switch (spindleDirection) {
-                case 'M3': spindleText = 'CW'; break;
-                case 'M4': spindleText = 'CCW'; break;
-                case 'M5': spindleText = 'Off'; break;
-                default: spindleText = 'Off'; break;
-            }
-            $('[data-route="workspace"] [id="spindle"]').text(Number(spindleSpeed) + ' RPM ' + spindleText);
-        }
         // Nonzero receivedLines is a good indicator of GCode execution
         // as opposed to jogging, etc.
         if (receivedLines && startTime) {
@@ -985,10 +1222,7 @@ $(function () {
             : "<div style='color:red'>" + modal.distance + "</div>";
         $('[data-route="workspace"] [id="distance"]').html(distanceText);
 
-        //var rateText = modal.units == 'G21' ? Number(velocity).toFixed(0) + ' mm/min' : Number(velocity).toFixed(2) + ' in/min';
-
-        //document.getElementById('active-state').innerHTML = rateText;
-        var stateText = stateName == 'Error' ? "Error: " + errorMessage : stateName;
+        var stateText = stateName == 'Error' ? "Error" : stateName;
 
         if (stateName.includes('error')) {
             document.getElementById('current-error').innerHTML = stateText;
@@ -1239,6 +1473,14 @@ $(function () {
         startTime = new Date().getTime();
     }
 
+    zeroAndRunGCode = function () {
+        cnc.click();
+        cnc.zeroAllAxes();
+        running = true;
+        cnc.controller.command('gcode:start')
+        startTime = new Date().getTime();
+    }
+
     pauseGCode = function () {
         cnc.click();
         cnc.controller.command('gcode:pause');
@@ -1283,7 +1525,7 @@ $(function () {
     // Workspace
     //
     $('[data-route="workspace"] [data-name="btn-dropdown"]').dropdown();
-    $('[data-route="workspace"] [data-name="active-state"]').text('NoConnect');
+    $('[data-route="workspace"] [data-name="active-state"]').text('-');
     $('[data-route="workspace"] select[data-name="select-distance"]').val('10');
 
     cycleDistance = function (up) {
