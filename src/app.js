@@ -1024,7 +1024,7 @@ $(function () {
         var button = document.getElementById(name);
         if (button.disabled == false) {
             button.disabled = true;
-            button.style.backgroundColor = '#f6f6f6';
+            //button.style.backgroundColor = '#f6f6f6';
             button.innerText = text;
         }
     }
