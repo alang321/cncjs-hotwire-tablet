@@ -1256,9 +1256,9 @@ $(function () {
             : "<div style='color:red'>" + modal.distance + "</div>";
         $('[data-route="workspace"] [id="distance"]').html(distanceText);
 
-        var stateText = stateName == 'Error' ? "Error: " + errorMessage : stateName;
+        var stateText = stateName == 'Error' ? "Error" : stateName;
 
-        if (stateName.includes('error')) {
+        if (!stateName.includes('error')) {
             document.getElementById('current-error').innerHTML = stateText;
         } else {
             document.getElementById('current-error').innerHTML = "";
