@@ -44,7 +44,9 @@ $(function () {
     var spindleSpeed = 0;
 
     var maxFeedrate = [-1, -1, -1, -1];
-    var feedrate_reference = 0;
+    var feedrate_reference = -1;
+    var dynamic_reference = -1;
+    var dynamic_scale_power = -1;
 
     cnc.initState = function () {
         // Select the "Load GCode File" heading instead of any file
@@ -388,20 +390,59 @@ $(function () {
     cnc.selectFeedrateReference = function () {
         var element = document.getElementById('feedrate-reference');
         var value = element.value;
-        console.log(feedrate_reference);
-        if (value > 0) {
+        if (value > -1) {
             cnc.setFeedrateReference(value);
         }else{
-            if (feedrate_reference > 0) {
+            if (feedrate_reference > -1) {
                 element.value = feedrate_reference;
             }
         }
     }
 
     cnc.setFeedrateReference = function (value) {
-        if (value > 0) {
+        if (value > -1) {
             feedrate_reference = value;
             var cmd = '$' + (87) + '=' + value;
+            controller.command('gcode', cmd);
+        }
+    }
+
+    cnc.selectDynamicReference = function () {
+        var element = document.getElementById('dynamic-reference');
+        var value = element.value;
+        if (value > -1) {
+            cnc.setDynamicReference(value);
+        }else{
+            if (dynamic_reference > -1) {
+                element.value = dynamic_reference;
+            }
+        }
+    }
+
+    cnc.setDynamicReference = function (value) {
+        if (value > -1) {
+            dynamic_reference = value;
+            var cmd = '$89=' + value;
+            controller.command('gcode', cmd);
+        }
+    }
+
+    cnc.selectDynamicScale = function () {
+        var element = document.getElementById('dynamic-power-scale');
+        var value = element.value;
+        if (value > -1) {
+            cnc.setDynamicScale(value);
+        }else{
+            if (dynamic_scale_power > -1) {
+                element.value = dynamic_scale_power;
+            }
+        }
+    }
+
+    cnc.setDynamicScale = function (value) {
+        if (value > -1) {
+            dynamic_scale_power = value;
+            var cmd = '$88=' + value;
             controller.command('gcode', cmd);
         }
     }
@@ -755,6 +796,16 @@ $(function () {
             document.getElementById('feedrate-reference').value = Math.round(feedrate_reference);
         }
 
+        if (settings['$89'] !== undefined) {
+            dynamic_reference = settings['$89'];
+            document.getElementById('dynamic-reference').value = Math.round(dynamic_reference);
+        }
+
+        if (settings['$88'] !== undefined) {
+            dynamic_scale_power = settings['$88'];
+            document.getElementById('dynamic-power-scale').value = Math.round(dynamic_scale_power);
+        }
+
         if (typeof savedGrblState !== 'undefined') {
             renderGrblState(savedGrblState);
             // Don't re-render the state if we get later settings reports,
@@ -1068,6 +1119,8 @@ $(function () {
         $('[data-route="workspace"] [id="max-vel-a"]').prop('disabled', cannotClick);
 
         $('[data-route="workspace"] [id="feedrate-reference"]').prop('disabled', cannotClick);
+        $('[data-route="workspace"] [id="dynamic-reference"]').prop('disabled', cannotClick);
+        $('[data-route="workspace"] [id="dynamic-power-scale"]').prop('disabled', cannotClick);
 
 
 

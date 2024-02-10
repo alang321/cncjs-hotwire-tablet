@@ -1036,14 +1036,39 @@
             <div class="container-fluid" style="background-color: #fef0ff;">
 
                 <div class="row no-gutter">
-                    <div class="col-xs-3 info-button">Feedrate reference:</div>
+                    <div class="col-xs-2 info-button">Feedrate reference:</div>
                     <div class="col-xs-2">
 
                         <select class="form-control" id="feedrate-reference" onchange="cnc.selectFeedrateReference();">
-                            <option value="0"></option>
+                            <option value="-1"></option>
+                            <option value="0">GRBL</option>
                             <option value="1">Minimum</option>
                             <option value="2">Average</option>
                             <option value="3">Maximum</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row no-gutter">
+                    <div class="col-xs-2 info-button">Dynamic reference:</div>
+                    <div class="col-xs-2">
+
+                        <select class="form-control" id="dynamic-reference" onchange="cnc.selectFeedrateReference();">
+                            <option value="-1"></option>
+                            <option value="0">GRBL</option>
+                            <option value="1">Minimum</option>
+                            <option value="2">Average</option>
+                            <option value="3">Maximum</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row no-gutter">
+                    <div class="col-xs-2 info-button">Dynamic Scale:</div>
+                    <div class="col-xs-2">
+
+                        <select class="form-control" id="dynamic-power-scale" onchange="cnc.selectFeedrateReference();">
+                            <option value="-1"></option>
+                            <option value="0">Voltage</option>
+                            <option value="1">Power</option>
                         </select>
                     </div>
                 </div>
