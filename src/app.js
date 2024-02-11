@@ -342,7 +342,7 @@ $(function () {
         messages.scrollTop = messages.scrollHeight;
     }
 
-    cnc.home = function () {
+    cnc.goHome = function () {
         cnc.click();
         controller.command('gcode', 'G28');
     }
