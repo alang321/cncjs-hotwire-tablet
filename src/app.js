@@ -159,19 +159,19 @@ $(function () {
 
     cnc.goAxis = function (axis, coordinate) {
         cnc.click();
-        controller.command('gcode', 'G91');
+        controller.command('gcode', 'G90');
         controller.command('gcode', 'G0 ' + axis + coordinate);
     }
 
     cnc.goTwoAxes = function (axis1, axis2, coordinate) {
         cnc.click();
-        controller.command('gcode', 'G91');
+        controller.command('gcode', 'G90');
         controller.command('gcode', 'G0 ' + axis1 + coordinate + ' ' + axis2 + coordinate);
     }
 
     cnc.goAllAxes = function (coordinate) {
         cnc.click();
-        controller.command('gcode', 'G91');
+        controller.command('gcode', 'G90');
         controller.command('gcode', 'G0 X' + coordinate + ' Y' + coordinate + ' Z' + coordinate + ' A' + coordinate);
     }
 
@@ -452,26 +452,16 @@ $(function () {
             var s = _.map(params, function (value, letter) {
                 return '' + letter + value;
             }).join(' ');
-            if (modal.distance == 'G90') {
-                controller.command('gcode', 'G91'); // relative distance
-                controller.command('gcode', 'G0 ' + s);
-                controller.command('gcode', 'G90'); // absolute distance
-            } else {
-                controller.command('gcode', 'G0 ' + s);
-            }
+            controller.command('gcode', 'G91'); // relative distance
+            controller.command('gcode', 'G0 ' + s);
         };
         var move = function (params) {
             params = params || {};
             var s = _.map(params, function (value, letter) {
                 return '' + letter + value;
             }).join(' ');
-            if (modal.distance == 'G90') {
-                controller.command('gcode', 'G0 ' + s);
-            } else {
-                controller.command('gcode', 'G90'); // absolute distance
-                controller.command('gcode', 'G0 ' + s);
-                controller.command('gcode', 'G91'); // relative distance
-            }
+            controller.command('gcode', 'G91'); // relative distance
+            controller.command('gcode', 'G0 ' + s);
         };
         var distance = Number($('[data-route="workspace"] select[data-name="select-distance"]').val()) || 0;
 
