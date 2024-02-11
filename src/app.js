@@ -1244,12 +1244,7 @@ $(function () {
 
         var stateText = stateName == 'Error' ? "Error" : stateName;
 
-        if (stateName.includes('error')) {
-            document.getElementById('current-error').innerHTML = stateText;
-        } else {
-            document.getElementById('current-error').innerHTML = "";
-            document.getElementById('current-state').innerHTML = stateText;
-        }
+        document.getElementById('current-state').innerHTML = stateText;
 
         //document.getElementById('current-error').innerHTML = errorMessage;
 
