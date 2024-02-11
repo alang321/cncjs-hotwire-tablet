@@ -87,17 +87,11 @@ $(function () {
     });
 
     controller.on('serialport:open', function (options) {
-        initAll(options);
-    });
-
-    cnc.initAll = function (options) {
         cnc.initState();
 
-        var controllerType = 'Grbl';
-        if (options  !== undefined) {
-            var port = options.port;
-            var baudrate = options.baudrate;
-        }
+        var controllerType = options.controllerType;
+        var port = options.port;
+        var baudrate = options.baudrate;
 
         cnc.connected = true;
         cnc.controllerType = controllerType;
@@ -108,11 +102,48 @@ $(function () {
         $('[data-route="connection"] [data-name="btn-close"]').prop('disabled', false);
 
         Cookies.set('cnc.controllerType', controllerType, { expires: 365 });
+        Cookies.set('cnc.port', port, { expires: 365 });
+        Cookies.set('cnc.baudrate', baudrate, { expires: 365 });
 
-        if (options  !== undefined) {
-            Cookies.set('cnc.port', port, { expires: 365 });
-            Cookies.set('cnc.baudrate', baudrate, { expires: 365 });
+        if (controllerType === 'Grbl') {
+            // Read the settings so we can determine the units for position reports
+            // This will trigger a Grbl:settings callback to set grblReportingUnits
+
+            // This has a problem: The first status report arrives before the
+            // settings report, so interpreting the numbers from the first status
+            // report is ambiguous.  Subsequent status reports are interpreted correctly.
+            // We work around that by deferring status reports until the settings report.
+            // I commented this out because of https://github.com/cncjs/cncjs-shopfloor-tablet/issues/20
+            controller.writeln('?');
+            controller.writeln('$$');
+            //controller.writeln('?');
         }
+
+        root.location = '#/workspace';
+
+        //cnc.controller.command('reset');
+        //cnc.controller.command('unlock');
+        //console.log('startup');
+    });
+
+    cnc.initAll = function (axis, coordinate) {
+                cnc.initState();
+
+        var controllerType = options.controllerType;
+        var port = options.port;
+        var baudrate = options.baudrate;
+
+        cnc.connected = true;
+        cnc.controllerType = controllerType;
+        cnc.port = port;
+        cnc.baudrate = baudrate;
+
+        $('[data-route="connection"] [data-name="btn-open"]').prop('disabled', true);
+        $('[data-route="connection"] [data-name="btn-close"]').prop('disabled', false);
+
+        Cookies.set('cnc.controllerType', controllerType, { expires: 365 });
+        Cookies.set('cnc.port', port, { expires: 365 });
+        Cookies.set('cnc.baudrate', baudrate, { expires: 365 });
 
         if (controllerType === 'Grbl') {
             // Read the settings so we can determine the units for position reports
@@ -1531,6 +1562,4 @@ $(function () {
     var shiftDown = false;
     var ctrlDown = false;
     var altDown = false;
-
-    cnc.initAll();
 });
