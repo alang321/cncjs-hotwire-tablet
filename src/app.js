@@ -1532,5 +1532,5 @@ $(function () {
     var ctrlDown = false;
     var altDown = false;
 
-    initAll();
+    cnc.initAll();
 });
