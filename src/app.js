@@ -87,6 +87,10 @@ $(function () {
     });
 
     controller.on('serialport:open', function (options) {
+        initAll();
+    });
+
+    cnc.initAll = function (axis, coordinate) {
         cnc.initState();
 
         var controllerType = options.controllerType;
@@ -124,7 +128,7 @@ $(function () {
         //cnc.controller.command('reset');
         //cnc.controller.command('unlock');
         //console.log('startup');
-    });
+    }
 
     controller.on('serialport:close', function (options) {
         var port = options.port;
@@ -1522,4 +1526,6 @@ $(function () {
     var shiftDown = false;
     var ctrlDown = false;
     var altDown = false;
+
+    initAll();
 });
