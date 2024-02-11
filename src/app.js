@@ -342,6 +342,11 @@ $(function () {
         messages.scrollTop = messages.scrollHeight;
     }
 
+    cnc.home = function () {
+        cnc.click();
+        controller.command('gcode', 'G28');
+    }
+
     cnc.toggleUnits = function () {
         cnc.click();
         if (modal.units == 'G21') {
