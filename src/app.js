@@ -159,35 +159,23 @@ $(function () {
 
     cnc.goAxis = function (axis, coordinate) {
         cnc.click();
-        if (modal.distance == 'G90') {
-            controller.command('gcode', 'G0 ' + axis + coordinate);
-        } else {
-            controller.command('gcode', 'G90');
-            controller.command('gcode', 'G0 ' + axis + coordinate);
-            controller.command('gcode', 'G91');
-        }
+        controller.command('gcode', 'G90');
+        controller.command('gcode', 'G0 ' + axis + coordinate);
+        controller.command('gcode', 'G91');
     }
 
     cnc.goTwoAxes = function (axis1, axis2, coordinate) {
         cnc.click();
-        if (modal.distance == 'G90') {
-            controller.command('gcode', 'G0 ' + axis1 + coordinate + ' ' + axis2 + coordinate);
-        } else {
-            controller.command('gcode', 'G90');
-            controller.command('gcode', 'G0 ' + axis1 + coordinate + ' ' + axis2 + coordinate);
-            controller.command('gcode', 'G91');
-        }
+        controller.command('gcode', 'G90');
+        controller.command('gcode', 'G0 ' + axis1 + coordinate + ' ' + axis2 + coordinate);
+        controller.command('gcode', 'G91');
     }
 
     cnc.goAllAxes = function (coordinate) {
         cnc.click();
-        if (modal.distance == 'G90') {
-            controller.command('gcode', 'G0 X' + coordinate + ' Y' + coordinate + ' Z' + coordinate + ' A' + coordinate);
-        } else {
-            controller.command('gcode', 'G90');
-            controller.command('gcode', 'G0 X' + coordinate + ' Y' + coordinate + ' Z' + coordinate + ' A' + coordinate);
-            controller.command('gcode', 'G91');
-        }
+        controller.command('gcode', 'G90');
+        controller.command('gcode', 'G0 X' + coordinate + ' Y' + coordinate + ' Z' + coordinate + ' A' + coordinate);
+        controller.command('gcode', 'G91');
     }
 
 
