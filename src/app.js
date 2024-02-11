@@ -87,15 +87,17 @@ $(function () {
     });
 
     controller.on('serialport:open', function (options) {
-        initAll();
+        initAll(options);
     });
 
-    cnc.initAll = function (axis, coordinate) {
+    cnc.initAll = function (options) {
         cnc.initState();
 
-        var controllerType = options.controllerType;
-        var port = options.port;
-        var baudrate = options.baudrate;
+        var controllerType = 'Grbl';
+        if (options  !== undefined) {
+            var port = options.port;
+            var baudrate = options.baudrate;
+        }
 
         cnc.connected = true;
         cnc.controllerType = controllerType;
@@ -106,8 +108,11 @@ $(function () {
         $('[data-route="connection"] [data-name="btn-close"]').prop('disabled', false);
 
         Cookies.set('cnc.controllerType', controllerType, { expires: 365 });
-        Cookies.set('cnc.port', port, { expires: 365 });
-        Cookies.set('cnc.baudrate', baudrate, { expires: 365 });
+
+        if (options  !== undefined) {
+            Cookies.set('cnc.port', port, { expires: 365 });
+            Cookies.set('cnc.baudrate', baudrate, { expires: 365 });
+        }
 
         if (controllerType === 'Grbl') {
             // Read the settings so we can determine the units for position reports
