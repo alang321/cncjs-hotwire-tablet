@@ -357,6 +357,25 @@ $(function () {
         // No need to fix the button label, as that will be done by the status watcher
     }
 
+    cnc.setMaxFeedrateAll = function () {
+        var element = document.getElementById('max-vel-all');
+        var value = element.value;
+        if (value > 0) {
+            maxFeedrate[0] = value;
+            maxFeedrate[1] = value;
+            maxFeedrate[2] = value;
+            maxFeedrate[3] = value;
+            var cmd = '$' + (110 + 0) + '=' + value;
+            controller.command('gcode', cmd);
+            cmd = '$' + (110 + 1) + '=' + value;
+            controller.command('gcode', cmd);
+            cmd = '$' + (110 + 2) + '=' + value;
+            controller.command('gcode', cmd);
+            cmd = '$' + (110 + 3) + '=' + value;
+            controller.command('gcode', cmd);
+        }
+    }
+
     cnc.setMaxFeedrate = function (axis, value) {
         if (value > 0) {
             maxFeedrate[axis] = value;
